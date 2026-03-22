@@ -1,0 +1,2 @@
+[    3071ms] [ERROR] Failed to load resource: the server responded with a status of 400 () @ https://phowtdshnvuegykpnoxg.supabase.co/functions/v1/create-admin:0
+[    3144ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://phowtdshnvuegykpnoxg.supabase.co/favicon.ico:0
