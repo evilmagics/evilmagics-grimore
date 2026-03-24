@@ -44,17 +44,17 @@ Website ini mencerminkan kepribadian seorang *Backend Developer* yang pendiam na
 
 ### **C. Photography (The Moonlit Gallery)**
 
-* Galeri foto alam dengan Masonry Layout dan EXIF Metadata otomatis.
+*   Galeri foto alam dengan Masonry Layout dan EXIF Metadata otomatis.
 
 ## **5\. Konsep Navigasi (The Ley Lines)**
 
-* \[./root\] (Home), Constructs (Projects), Echoes (Photos), Signal (Contact).
+*   \[./evilmagics] (Home), Constructs (Projects), Echoes (Photos), Signal (Contact).
 
 ## **6\. Strategi Konten & SEO**
 
-* **Copywriting:** Menggunakan gaya bahasa "Technical-Mystic". Menjelaskan keahlian backend melalui metafora sihir (misal: *API as Summoning Gate*).  
-* **SEO:** Meta-tags dinamis per halaman proyek menggunakan Next.js generateMetadata.  
-* **Optimization:** Gambar menggunakan format .webp via Cloudinary, *caching* agresif di sisi server.
+*   **Copywriting:** Menggunakan gaya bahasa "Technical-Mystic". Menjelaskan keahlian backend melalui metafora sihir (misal: *API as Summoning Gate*).  
+*   **SEO:** Meta-tags dinamis per halaman proyek menggunakan Next.js generateMetadata.  
+*   **Optimization:** Gambar menggunakan format .webp via Cloudinary, *caching* agresif di sisi server.
 
 ## **7\. Alur Deployment (CI/CD)**
 

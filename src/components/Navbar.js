@@ -50,7 +50,7 @@ export default function Navbar() {
           textDecoration: "none",
         }}
       >
-        ./root
+        ./evilmagics
       </Link>
 
       {/* Mobile hamburger */}

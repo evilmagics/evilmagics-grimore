@@ -59,7 +59,7 @@ Dashboard ini akan berada di rute /sanctum atau /admin dan diproteksi secara ber
 
 1. **Authentication:** Menggunakan **Supabase Auth**. Hanya email Anda yang terdaftar sebagai admin yang bisa masuk.  
 2. **Authorization (RLS):** Database secara otomatis menolak semua permintaan INSERT/UPDATE/DELETE dari user yang tidak memiliki role \= 'admin' di tabel profiles.  
-3. **Middleware Guard:** Next.js Middleware akan memeriksa sesi user sebelum merender halaman admin. Jika tidak valid, user akan dilempar kembali ke halaman \[./root\].
+3. **Middleware Guard:** Next.js Middleware akan memeriksa sesi user sebelum merender halaman admin. Jika tidak valid, user akan dilempar kembali ke halaman [./evilmagics].
 
 ## **5\. Fitur Eksklusif Admin: "The Command Palette"**
 
