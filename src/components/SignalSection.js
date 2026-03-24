@@ -1,12 +1,13 @@
 "use client";
 import { useState, useRef, useCallback } from "react";
 import ScrollReveal from "./ScrollReveal";
+import { submitMessage } from "@/lib/actions";
 
 export default function SignalSection() {
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
   const [email, setEmail] = useState("");
-  const [error, setError] = useState(false);
+  const [error, setError] = useState(null);
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
   const btnRef = useRef(null);
@@ -35,21 +36,44 @@ export default function SignalSection() {
     }
   }, []);
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!subject.trim() || !message.trim() || !email.trim()) {
-      setError(true);
+      setError("Incomplete transmission. All fields required.");
       return;
     }
-    setError(false);
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError("Invalid signal_origin. Enter a valid email address.");
+      return;
+    }
+
+    setError(null);
     setSending(true);
-    setTimeout(() => {
+
+    try {
+      const result = await submitMessage({
+        email,
+        subject,
+        content: message,
+      });
+
+      if (!result.success) {
+        setError(result.error || "Transmission failed. Please try again.");
+        setSending(false);
+        return;
+      }
+
       setSending(false);
       setSent(true);
       if (btnRef.current) {
         const rect = btnRef.current.getBoundingClientRect();
         spawnSpark(rect.left + rect.width / 2, rect.top, "#00E5FF");
       }
-    }, 1400);
+    } catch {
+      setError("Transmission failed. Please try again.");
+      setSending(false);
+    }
   };
 
   const handleKeyDown = (e) => {
@@ -196,7 +220,7 @@ export default function SignalSection() {
               {error && (
                 <div style={{ display: "flex", gap: "0.6rem", marginBottom: "0.75rem", fontSize: "0.72rem", lineHeight: 1.6 }}>
                   <span style={{ color: "var(--mana)", opacity: 0.6 }}>[err]$</span>
-                  <span style={{ color: "#ff5f57" }}>Incomplete transmission. All fields required.</span>
+                  <span style={{ color: "#ff5f57" }}>{error}</span>
                 </div>
               )}
 
