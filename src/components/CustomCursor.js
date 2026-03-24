@@ -77,7 +77,7 @@ export default function CustomCursor() {
           borderRadius: "50%",
           background: "var(--mana)",
           pointerEvents: "none",
-          zIndex: 9999,
+          zIndex: 11000,
           mixBlendMode: "screen",
           transition: "transform 0.12s, width 0.2s, height 0.2s",
         }}
@@ -91,7 +91,7 @@ export default function CustomCursor() {
           borderRadius: "50%",
           border: "1px solid rgba(0,229,255,0.35)",
           pointerEvents: "none",
-          zIndex: 9998,
+          zIndex: 10999,
           transition: "all 0.14s ease",
         }}
       />

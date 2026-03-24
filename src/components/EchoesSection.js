@@ -1,11 +1,22 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import ScrollReveal from "./ScrollReveal";
 
 export default function EchoesSection({ photos = [] }) {
   const feedPhotos = photos.slice(0, 6);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
+
+  useEffect(() => {
+    if (!selectedPhoto) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [selectedPhoto]);
 
   // Advanced Bento Layout for a Sci-Fi / Arcane terminal feel
   const gridStyles = [
@@ -27,13 +38,13 @@ export default function EchoesSection({ photos = [] }) {
           </div>
         </ScrollReveal>
         <ScrollReveal>
-          <div 
-            style={{ 
-              display: "grid", 
-              gridTemplateColumns: "repeat(4, 1fr)", 
-              gridAutoRows: "180px", 
-              gap: "0.8rem", 
-              maxWidth: "1080px", 
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(4, 1fr)",
+              gridAutoRows: "180px",
+              gap: "0.8rem",
+              maxWidth: "1080px",
               margin: "0 auto",
               padding: "0 1rem"
             }}
@@ -83,7 +94,7 @@ export default function EchoesSection({ photos = [] }) {
                 }}
               >
                 {/* Fake border to respect clipPath */}
-                <div 
+                <div
                   className="cb-border"
                   style={{
                     position: "absolute",
@@ -95,7 +106,7 @@ export default function EchoesSection({ photos = [] }) {
                     boxSizing: "border-box"
                   }}
                 />
-                
+
                 {/* Hologram Scanlines Effect for Default State */}
                 <div
                   className="cb-hologram-lines"
@@ -164,8 +175,8 @@ export default function EchoesSection({ photos = [] }) {
                 </div>
 
                 {/* Bottom Dark Gradient from Memory Mosaic */}
-                <div 
-                  className="cb-overlay" 
+                <div
+                  className="cb-overlay"
                   style={{
                     position: "absolute",
                     inset: 0,
@@ -208,7 +219,7 @@ export default function EchoesSection({ photos = [] }) {
             ))}
           </div>
         </ScrollReveal>
-        
+
         <ScrollReveal>
           <div style={{ textAlign: "center", marginTop: "3.5rem" }}>
             <Link
@@ -237,7 +248,7 @@ export default function EchoesSection({ photos = [] }) {
 
       {/* Lightbox Modal */}
       {selectedPhoto && (
-        <div 
+        <div
           style={{
             position: "fixed",
             inset: 0,
@@ -252,11 +263,13 @@ export default function EchoesSection({ photos = [] }) {
           }}
           onClick={() => setSelectedPhoto(null)}
         >
-          <div 
+          <div
             style={{
               position: "relative",
-              maxWidth: "1200px",
-              width: "100%",
+              width: "min(1200px, 95vw)",
+              maxWidth: "95vw",
+              maxHeight: "95vh",
+              height: "auto",
               aspectRatio: selectedPhoto.aspect || "16/9",
               background: "rgba(0,25,35,0.4)",
               clipPath: "polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px)",
@@ -267,7 +280,7 @@ export default function EchoesSection({ photos = [] }) {
             onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inner content
           >
             {/* Fake border for modal */}
-            <div 
+            <div
               style={{
                 position: "absolute",
                 inset: 0,
@@ -278,7 +291,7 @@ export default function EchoesSection({ photos = [] }) {
               }}
             />
             {/* Targeting crosshairs overlay */}
-            <div 
+            <div
               style={{
                 position: "absolute",
                 inset: "2%",
@@ -287,10 +300,10 @@ export default function EchoesSection({ photos = [] }) {
                 zIndex: 3
               }}
             >
-              <div style={{ position: "absolute", top: "-5px", left: "-5px", width: "15px", height: "15px", borderTop: "2px solid var(--mana)", borderLeft: "2px solid var(--mana)" }}/>
-              <div style={{ position: "absolute", bottom: "-5px", right: "-5px", width: "15px", height: "15px", borderBottom: "2px solid var(--mana)", borderRight: "2px solid var(--mana)" }}/>
+              <div style={{ position: "absolute", top: "-5px", left: "-5px", width: "15px", height: "15px", borderTop: "2px solid var(--mana)", borderLeft: "2px solid var(--mana)" }} />
+              <div style={{ position: "absolute", bottom: "-5px", right: "-5px", width: "15px", height: "15px", borderBottom: "2px solid var(--mana)", borderRight: "2px solid var(--mana)" }} />
             </div>
-            
+
             <div
               style={{
                 width: "100%",
@@ -325,10 +338,19 @@ export default function EchoesSection({ photos = [] }) {
                   </h2>
                 </div>
                 <div style={{ textAlign: "right", fontFamily: "monospace", fontSize: "0.75rem", color: "rgba(255,255,255,0.7)", lineHeight: "1.6" }}>
-                  <div>[APT] {selectedPhoto.exif_data?.aperture}</div>
-                  <div>[SHT] {selectedPhoto.exif_data?.shutter}</div>
-                  <div>[ISO] {selectedPhoto.exif_data?.iso}</div>
-                  <div>{selectedPhoto.exif_data?.focal && `[FCL] ${selectedPhoto.exif_data.focal}`}</div>
+                  <div style={{ display: "grid", gridTemplateColumns: "auto auto", gap: "0.2rem 0.85rem", justifyContent: "end", alignItems: "center" }}>
+                    <span>{selectedPhoto.exif_data?.aperture || "No data"}</span>
+                    <span style={{ color: "var(--mana)" }}>[APT]</span>
+
+                    <span>{selectedPhoto.exif_data?.shutter || "No data"}</span>
+                    <span style={{ color: "var(--mana)" }}>[SHT]</span>
+
+                    <span>{selectedPhoto.exif_data?.iso || "No data"}</span>
+                    <span style={{ color: "var(--mana)" }}>[ISO]</span>
+
+                    <span>{selectedPhoto.exif_data?.focal || "No data"}</span>
+                    <span style={{ color: "var(--mana)" }}>[FCL]</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -339,8 +361,8 @@ export default function EchoesSection({ photos = [] }) {
               onClick={() => setSelectedPhoto(null)}
               style={{
                 position: "absolute",
-                top: "1.5rem",
-                right: "1.5rem",
+                top: "calc(2% + 0.8rem)",
+                right: "calc(2% + 0.8rem)",
                 zIndex: 10,
                 width: "40px",
                 height: "40px",

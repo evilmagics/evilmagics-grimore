@@ -30,6 +30,20 @@ export async function fetchProjects() {
       id, idx, title, slug, summary, description,
       cover_url, cover_gradient, mana_cost,
       tags, live_url, repo_url, featured, created_at,
+      project_images (
+        id,
+        cloudinary_public_id,
+        image_url,
+        secure_url,
+        width,
+        height,
+        format,
+        bytes,
+        alt_text,
+        sort_order,
+        is_primary,
+        created_at
+      ),
       project_tech (
         tech_stack ( id, name, icon_key, category )
       )
@@ -45,6 +59,12 @@ export async function fetchProjects() {
   return data.map(project => ({
     ...project,
     techs: project.project_tech?.map(pt => pt.tech_stack) || [],
+    images: (project.project_images || [])
+      .slice()
+      .sort((a, b) => {
+        if (a.sort_order !== b.sort_order) return a.sort_order - b.sort_order
+        return new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+      }),
   }))
 }
 

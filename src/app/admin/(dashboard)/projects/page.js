@@ -1,13 +1,27 @@
-export default function ArchivistPage() {
+import { FolderKanban } from "lucide-react";
+import { fetchProjects, fetchTechStack } from "@/lib/queries";
+import { Separator } from "@/components/ui/separator";
+import { AdminProjectsClient } from "@/components/admin/AdminProjectsClient";
+
+export default async function ArchivistPage() {
+  const [projects, techStack] = await Promise.all([
+    fetchProjects(),
+    fetchTechStack(),
+  ]);
+
   return (
-    <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in duration-500">
-      <header className="border-b border-[#1A2F23] pb-4">
-        <h1 className="text-3xl font-bold tracking-widest text-white uppercase">The Archivist</h1>
-        <p className="text-gray-500 font-mono text-sm mt-2">Construct Database Management</p>
+    <div className="max-w-6xl mx-auto space-y-6">
+      <header>
+        <h1 className="text-2xl font-semibold tracking-tight text-white flex items-center gap-3">
+          <FolderKanban className="w-5 h-5 text-primary" />
+          The Archivist
+        </h1>
+        <p className="text-muted-foreground text-sm mt-1">Construct Database Management — {projects.length} projects</p>
       </header>
-      <div className="border border-[#1A2F23] border-dashed p-12 text-center text-gray-600 font-mono text-sm">
-        [ PROJECT MANAGER MODULE LOADED - WAITING FOR DATA ]
-      </div>
+
+      <Separator />
+
+      <AdminProjectsClient projects={projects} techStack={techStack} />
     </div>
   );
 }
