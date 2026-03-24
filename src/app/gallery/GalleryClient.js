@@ -4,6 +4,8 @@ import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import CustomCursor from "../../components/CustomCursor";
 import ScrollReveal from "../../components/ScrollReveal";
+import PhotoCard from "../../components/ui/PhotoCard";
+import PhotoModal from "../../components/ui/PhotoModal";
 
 export default function GalleryClient({ photos = [], categories = [] }) {
   const categoryNames = useMemo(() => ["All", ...categories.map(c => c.name)], [categories]);
@@ -141,74 +143,16 @@ export default function GalleryClient({ photos = [], categories = [] }) {
           >
             {filtered.map((photo) => (
               <ScrollReveal key={photo.id}>
-                <div
-                  className="elec-target"
-                  style={{
+                <PhotoCard
+                  photo={photo}
+                  onClick={() => setLightbox(photo)}
+                  containerStyle={{
                     breakInside: "avoid",
                     marginBottom: "1.2rem",
-                    cursor: "pointer",
-                    position: "relative",
-                    overflow: "hidden",
-                    border: "1px solid rgba(0,229,255,0.06)",
-                    transition: "all 0.4s",
+                    aspectRatio: photo.aspect || "4/3",
+                    height: "auto", // the card normally inherits 100% height
                   }}
-                  onClick={() => setLightbox(photo)}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = "rgba(0,229,255,0.2)";
-                    e.currentTarget.style.boxShadow =
-                      "0 8px 30px rgba(0,0,0,0.4), 0 0 15px rgba(0,229,255,0.08)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = "rgba(0,229,255,0.06)";
-                    e.currentTarget.style.boxShadow = "";
-                  }}
-                >
-                  <div
-                    style={{
-                      width: "100%",
-                      aspectRatio: photo.aspect || "4/3",
-                      background: photo.gradient,
-                      position: "relative",
-                    }}
-                  />
-                  <div
-                    style={{
-                      position: "absolute",
-                      bottom: 0,
-                      left: 0,
-                      right: 0,
-                      background:
-                        "linear-gradient(to top, rgba(0,0,0,0.8), transparent)",
-                      padding: "2rem 1rem 0.8rem",
-                      opacity: 0,
-                      transition: "opacity 0.3s",
-                    }}
-                    className="photo-overlay"
-                    onMouseEnter={(e) => (e.currentTarget.style.opacity = 1)}
-                    onMouseLeave={(e) => (e.currentTarget.style.opacity = 0)}
-                  >
-                    <div
-                      style={{
-                        fontFamily: "var(--font-heading)",
-                        fontSize: "0.7rem",
-                        color: "var(--mist)",
-                        marginBottom: "0.3rem",
-                      }}
-                    >
-                      {photo.title}
-                    </div>
-                    <div
-                      style={{
-                        fontSize: "0.46rem",
-                        color: "rgba(0,229,255,0.5)",
-                        letterSpacing: "0.1em",
-                      }}
-                    >
-                      {photo.exif_data?.aperture} · {photo.exif_data?.shutter} ·{" "}
-                      {photo.exif_data?.iso}
-                    </div>
-                  </div>
-                </div>
+                />
               </ScrollReveal>
             ))}
           </div>
@@ -216,118 +160,23 @@ export default function GalleryClient({ photos = [], categories = [] }) {
 
         {/* Lightbox */}
         {lightbox && (
-          <div
-            style={{
-              position: "fixed",
-              inset: 0,
-              background: "rgba(0,0,0,0.92)",
-              zIndex: 1000,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-              animation: "fadeUp 0.3s ease",
-              backdropFilter: "blur(10px)",
+          <PhotoModal
+            photo={lightbox}
+            onClose={() => setLightbox(null)}
+            onNext={() => {
+              const idx = filtered.findIndex(p => p.id === lightbox.id);
+              if (idx < filtered.length - 1) setLightbox(filtered[idx + 1]);
             }}
-            onClick={() => setLightbox(null)}
-          >
-            <button
-              onClick={() => setLightbox(null)}
-              style={{
-                position: "absolute",
-                top: "2rem",
-                right: "2rem",
-                background: "none",
-                border: "1px solid rgba(0,229,255,0.2)",
-                color: "var(--mana)",
-                fontSize: "0.8rem",
-                width: "36px",
-                height: "36px",
-                cursor: "pointer",
-                fontFamily: "var(--font-mono)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                transition: "all 0.3s",
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.borderColor = "var(--mana)";
-                e.target.style.boxShadow = "0 0 12px var(--mana-glow)";
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.borderColor = "rgba(0,229,255,0.2)";
-                e.target.style.boxShadow = "";
-              }}
-            >
-              ✕
-            </button>
-
-            <div
-              style={{
-                maxWidth: "80vw",
-                maxHeight: "80vh",
-                position: "relative",
-              }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div
-                style={{
-                  width: "min(70vw, 800px)",
-                  aspectRatio: lightbox.aspect || "4/3",
-                  background: lightbox.gradient,
-                  position: "relative",
-                  border: "1px solid rgba(0,229,255,0.1)",
-                }}
-              />
-              {/* Metadata */}
-              <div
-                style={{
-                  position: "absolute",
-                  bottom: "1rem",
-                  right: "1rem",
-                  background: "rgba(0,0,0,0.7)",
-                  border: "1px solid rgba(0,229,255,0.1)",
-                  padding: "0.8rem 1rem",
-                  backdropFilter: "blur(6px)",
-                }}
-              >
-                <div
-                  style={{
-                    fontFamily: "var(--font-heading)",
-                    fontSize: "0.7rem",
-                    color: "var(--mist)",
-                    marginBottom: "0.4rem",
-                    letterSpacing: "0.1em",
-                  }}
-                >
-                  {lightbox.title}
-                </div>
-                <div
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "0.48rem",
-                    color: "rgba(0,229,255,0.5)",
-                    letterSpacing: "0.1em",
-                    lineHeight: 1.8,
-                  }}
-                >
-                  <div>aperture: {lightbox.exif_data?.aperture}</div>
-                  <div>shutter: {lightbox.exif_data?.shutter}</div>
-                  <div>iso: {lightbox.exif_data?.iso}</div>
-                  {lightbox.exif_data?.focal && <div>focal: {lightbox.exif_data.focal}</div>}
-                  <div>category: {lightbox.category}</div>
-                </div>
-              </div>
-            </div>
-          </div>
+            onPrev={() => {
+              const idx = filtered.findIndex(p => p.id === lightbox.id);
+              if (idx > 0) setLightbox(filtered[idx - 1]);
+            }}
+          />
         )}
       </main>
       <Footer />
 
       <style jsx>{`
-        .masonry-grid > div:hover .photo-overlay {
-          opacity: 1 !important;
-        }
         @media (max-width: 768px) {
           .masonry-grid {
             column-count: 2 !important;
