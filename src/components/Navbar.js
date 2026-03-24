@@ -21,27 +21,10 @@ export default function Navbar() {
   ];
 
   return (
-    <nav
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        width: "100%",
-        zIndex: 500,
-        padding: "1.1rem 3rem",
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        background: scrolled
-          ? "rgba(5,5,5,0.95)"
-          : "linear-gradient(to bottom, rgba(5,5,5,0.92), transparent)",
-        backdropFilter: "blur(6px)",
-        transition: "background 0.3s",
-        borderBottom: scrolled ? "1px solid rgba(0,229,255,0.06)" : "none",
-      }}
-    >
+    <nav className={`main-nav ${scrolled ? "scrolled" : ""}`}>
       <Link
         href="/"
+        className="brand-link"
         style={{
           fontFamily: "var(--font-heading)",
           fontSize: "0.7rem",
@@ -69,50 +52,19 @@ export default function Navbar() {
       {/* Mobile hamburger */}
       <button
         onClick={() => setMobileOpen(!mobileOpen)}
-        style={{
-          display: "none",
-          background: "none",
-          border: "none",
-          color: "var(--mana)",
-          fontSize: "1.2rem",
-          cursor: "pointer",
-          zIndex: 600,
-        }}
         className="mobile-nav-toggle"
         aria-label="Toggle navigation"
       >
         {mobileOpen ? "✕" : "☰"}
       </button>
 
-      <ul
-        style={{
-          display: "flex",
-          gap: "2.5rem",
-          listStyle: "none",
-        }}
-        className={`nav-links ${mobileOpen ? "nav-open" : ""}`}
-      >
+      <ul className={`nav-links ${mobileOpen ? "nav-open" : ""}`}>
         {navLinks.map((link) => (
           <li key={link.label}>
             <Link
               href={link.href}
               onClick={() => setMobileOpen(false)}
-              style={{
-                fontSize: "0.58rem",
-                letterSpacing: "0.25em",
-                color: "rgba(224,224,224,0.4)",
-                textDecoration: "none",
-                textTransform: "uppercase",
-                transition: "color 0.3s",
-                position: "relative",
-                paddingBottom: "3px",
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.color = "var(--mana)";
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.color = "rgba(224,224,224,0.4)";
-              }}
+              className="nav-link-item"
             >
               {link.label}
             </Link>
@@ -121,9 +73,60 @@ export default function Navbar() {
       </ul>
 
       <style jsx>{`
+        .main-nav {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          z-index: 500;
+          padding: 1.1rem 3rem;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          background: linear-gradient(to bottom, rgba(5,5,5,0.92), transparent);
+          backdrop-filter: blur(6px);
+          transition: background 0.3s, padding 0.3s;
+          border-bottom: none;
+        }
+        .main-nav.scrolled {
+          background: rgba(5,5,5,0.95);
+          border-bottom: 1px solid rgba(0,229,255,0.06);
+        }
+        .nav-links {
+          display: flex;
+          gap: 2.5rem;
+          list-style: none;
+          margin: 0;
+          padding: 0;
+        }
+        .nav-link-item {
+          font-size: 0.58rem;
+          letter-spacing: 0.25em;
+          color: rgba(224,224,224,0.4);
+          text-decoration: none;
+          text-transform: uppercase;
+          transition: color 0.3s;
+          position: relative;
+          padding-bottom: 3px;
+        }
+        .nav-link-item:hover {
+          color: var(--mana);
+        }
+        .mobile-nav-toggle {
+          display: none;
+          background: none;
+          border: none;
+          color: var(--mana);
+          font-size: 1.2rem;
+          cursor: pointer;
+          z-index: 600;
+        }
         @media (max-width: 768px) {
+          .main-nav {
+            padding: 1rem 1.5rem;
+          }
           .mobile-nav-toggle {
-            display: block !important;
+            display: block;
           }
           .nav-links {
             position: fixed;
@@ -134,13 +137,13 @@ export default function Navbar() {
             flex-direction: column;
             background: rgba(5,5,5,0.98);
             padding: 5rem 2rem;
-            gap: 2rem !important;
+            gap: 2rem;
             transform: translateX(100%);
             transition: transform 0.3s ease;
             border-left: 1px solid rgba(0,229,255,0.1);
           }
           .nav-open {
-            transform: translateX(0) !important;
+            transform: translateX(0);
           }
         }
       `}</style>

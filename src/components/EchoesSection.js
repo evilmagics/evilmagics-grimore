@@ -40,23 +40,14 @@ export default function EchoesSection({ photos = [] }) {
           </div>
         </ScrollReveal>
         <ScrollReveal>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(4, 1fr)",
-              gridAutoRows: "180px",
-              gap: "0.8rem",
-              maxWidth: "1080px",
-              margin: "0 auto",
-              padding: "0 1rem"
-            }}
-          >
+          <div className="echoes-grid">
             {feedPhotos.map((photo, i) => (
               <PhotoCard
                 key={photo.id}
                 photo={photo}
                 onClick={() => setSelectedPhoto(photo)}
                 containerStyle={gridStyles[i]}
+                className="echoes-grid-item"
               />
             ))}
           </div>
@@ -106,15 +97,31 @@ export default function EchoesSection({ photos = [] }) {
 
       {/* Styles for responsive grid */}
       <style jsx global>{`
+        .echoes-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          grid-auto-rows: 180px;
+          gap: 0.8rem;
+          max-width: 1080px;
+          margin: 0 auto;
+          padding: 0 1rem;
+        }
         @media (max-width: 768px) {
-          #echoes div[style*="grid-template-columns"] {
-            grid-template-columns: 1fr 1fr !important;
-            grid-auto-rows: 200px !important;
+          .echoes-grid {
+            grid-template-columns: 1fr;
+            grid-auto-rows: 250px;
           }
-          #echoes div[style*="grid-column: span 2"] {
-            grid-column: span 2 !important;
+          #echoes .photo-card {
+            grid-column: span 1 !important;
+            grid-row: span 1 !important;
           }
-          #echoes div[style*="grid-row: span 2"] {
+        }
+        @media (min-width: 769px) and (max-width: 1024px) {
+          .echoes-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+          #echoes .photo-card {
+            grid-column: span 1 !important;
             grid-row: span 1 !important;
           }
         }

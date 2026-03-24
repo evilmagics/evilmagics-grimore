@@ -38,10 +38,12 @@ export default function RuneGrid({ techStack = [] }) {
   }, []);
 
   useEffect(() => {
-    const R = 220; 
     const params = rotationParams.current;
 
     const updateGlobe = () => {
+      // Dynamic radius based on window width
+      const R = window.innerWidth < 768 ? 140 : 220;
+
       if (params.isHovering) {
         params.vx += (params.mouseY * 0.008 - params.vx) * 0.1;
         params.vy += (params.mouseX * 0.008 - params.vy) * 0.1;
@@ -103,6 +105,18 @@ export default function RuneGrid({ techStack = [] }) {
     rotationParams.current.isHovering = true;
   };
 
+  const handleTouchMove = (e) => {
+    if (!containerRef.current || e.touches.length === 0) return;
+    const touch = e.touches[0];
+    const rect = containerRef.current.getBoundingClientRect();
+    const x = touch.clientX - rect.left - rect.width / 2;
+    const y = touch.clientY - rect.top - rect.height / 2;
+    
+    rotationParams.current.mouseX = x / (rect.width / 2);
+    rotationParams.current.mouseY = y / (rect.height / 2);
+    rotationParams.current.isHovering = true;
+  };
+
   const handleMouseLeave = () => {
     rotationParams.current.isHovering = false;
   };
@@ -147,7 +161,7 @@ export default function RuneGrid({ techStack = [] }) {
   };
 
   return (
-    <section className="section" id="essences" style={{ minHeight: "800px", padding: "4rem 0", position: "relative" }}>
+    <section className="section rune-grid-section" id="essences">
       <ScrollReveal>
         <div className="section-header">
           <span className="section-label">:: CORE.ESSENCES</span>
@@ -166,16 +180,9 @@ export default function RuneGrid({ techStack = [] }) {
           ref={containerRef}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
-          style={{
-            position: "relative",
-            width: "100%",
-            maxWidth: "700px",
-            height: "600px",
-            margin: "4rem auto",
-            overflow: "hidden",
-            cursor: "grab",
-            zIndex: 1
-          }}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleMouseLeave}
+          className="globe-container"
           onMouseDown={(e) => { e.currentTarget.style.cursor = "grabbing"; }}
           onMouseUp={(e) => { e.currentTarget.style.cursor = "grab"; }}
         >
@@ -282,6 +289,37 @@ export default function RuneGrid({ techStack = [] }) {
         .globe-label:hover {
           opacity: 1 !important;
           transform: translateY(0) scale(1) !important;
+        }
+        .rune-grid-section {
+          min-height: 800px;
+          padding: 4rem 0;
+          position: relative;
+        }
+        .globe-container {
+          position: relative;
+          width: 100%;
+          max-width: 700px;
+          height: 600px;
+          margin: 4rem auto;
+          overflow: hidden;
+          cursor: grab;
+          z-index: 1;
+        }
+        @media (max-width: 768px) {
+          .rune-grid-section {
+            min-height: auto;
+            padding: 3rem 0;
+          }
+          .globe-container {
+            height: 400px;
+            margin: 2rem auto;
+          }
+          .globe-icon-wrapper {
+            transform: scale(0.8);
+          }
+          .globe-label {
+            display: none !important; /* Hide label on mobile to avoid clutter */
+          }
         }
       `}</style>
     </section>

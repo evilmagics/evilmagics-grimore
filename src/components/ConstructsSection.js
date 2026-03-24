@@ -212,9 +212,9 @@ export default function ConstructsSection({ projects = [] }) {
         </div>
       </ScrollReveal>
       <ScrollReveal>
-        <div style={{ display: "flex", gap: "2rem", maxWidth: "1200px", margin: "0 auto", padding: "2rem 0", alignItems: "center", minHeight: "600px" }}>
+        <div className="constructs-layout">
 
-          <div style={{ position: "relative", width: "550px", height: "550px", flexShrink: 0 }}>
+          <div className="constructs-orbit-container">
             {/* Center Core */}
             <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: "70px", height: "70px", borderRadius: "50%", border: "2px solid var(--mana)", background: "rgba(0,229,255,0.05)", boxShadow: "0 0 30px var(--mana-glow)", zIndex: 10, display: "flex", alignItems: "center", justifyContent: "center" }}>
               <div style={{ width: "20px", height: "20px", background: "var(--mana)", borderRadius: "50%", animation: "pulse 2s infinite alternate" }} />
@@ -286,7 +286,7 @@ export default function ConstructsSection({ projects = [] }) {
             })}
           </div>
 
-          <div style={{ flex: 1, borderLeft: "1px solid rgba(0,229,255,0.15)", paddingLeft: "3.5rem", position: "relative" }}>
+          <div className="constructs-content">
             <div style={{ color: "var(--mana)", fontFamily: "var(--font-mono)", fontSize: "0.75rem", letterSpacing: "3px", marginBottom: "1rem" }}>
               ORBITAL NODE: {activeProject.idx}
             </div>
@@ -658,15 +658,54 @@ export default function ConstructsSection({ projects = [] }) {
           mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.8));
           animation: hologram-scan 2.2s ease-in-out infinite;
         }
+        .constructs-layout {
+          display: flex;
+          gap: 2rem;
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 2rem 1rem;
+          align-items: center;
+          min-height: 600px;
+        }
+        .constructs-orbit-container {
+          position: relative;
+          width: 550px;
+          height: 550px;
+          flex-shrink: 0;
+        }
+        .constructs-content {
+          flex: 1;
+          border-left: 1px solid rgba(0,229,255,0.15);
+          padding-left: 3.5rem;
+          position: relative;
+        }
         @media (max-width: 1024px) {
-           /* Simplified responsive structural changes */
-           .section > div > div {
+           .constructs-layout {
              flex-direction: column;
+             gap: 3rem;
            }
-           .section > div > div > div:first-child {
-             width: 400px !important;
-             height: 400px !important;
-             margin: 0 auto 3rem;
+           .constructs-orbit-container {
+             width: 400px;
+             height: 400px;
+             margin: 0 auto;
+             transform: scale(0.8);
+             transform-origin: center center;
+           }
+           .constructs-content {
+             border-left: none;
+             padding-left: 0;
+             border-top: 1px dashed rgba(0,229,255,0.15);
+             padding-top: 2rem;
+             width: 100%;
+           }
+        }
+        @media (max-width: 768px) {
+           .constructs-orbit-container {
+             transform: scale(0.6);
+             height: 350px;
+           }
+           .constructs-content {
+             padding-top: 1.5rem;
            }
         }
       `}</style>
