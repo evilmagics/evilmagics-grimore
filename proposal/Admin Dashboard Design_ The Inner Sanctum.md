@@ -1,69 +1,69 @@
 # **Admin Dashboard Design: The Inner Sanctum**
 
-Dokumen ini merinci konsep, fitur, dan spesifikasi teknis untuk pusat kendali portofolio "The Silent Architect's Grimoire".
+This document details the concepts, features, and technical specifications for the control center of "The Silent Architect's Grimoire" portfolio.
 
-## **1\. Konsep Visual: "Obsidian Analytics"**
+## **1. Visual Concept: "Obsidian Analytics"**
 
-Berbeda dengan halaman publik yang abstrak, Dashboard ini lebih mengutamakan **Struktur & Utilitas**, namun tetap dalam balutan tema *Dark Dungeon*.
+Unlike the abstract public pages, this Dashboard prioritizes **Structure & Utility**, while still wrapped in a *Dark Dungeon* theme.
 
-* **Interface:** *High-contrast Dark Mode*. Menggunakan latar belakang \#050505 dengan aksen garis tipis (1px) berwarna \#1A2F23 untuk memisahkan antar modul.  
-* **Vibe:** Seperti layar monitor di dalam bunker rahasia atau ruang kendali *steampunk*.  
-* **Interaksi:** Minim animasi dekoratif, lebih banyak transisi *instant* atau *micro-animations* yang memberikan *feedback* teknis.
+* **Interface:** *High-contrast Dark Mode*. Uses a #050505 background with thin (1px) #1A2F23 lines to separate modules.  
+* **Vibe:** Like a monitor screen inside a secret bunker or a *steampunk* control room.  
+* **Interaction:** Minimal decorative animation, focusing on *instant* transitions or technical *micro-animations* for feedback.
 
-## **2\. Arsitektur Dashboard (The Control Modules)**
+## **2. Dashboard Architecture (The Control Modules)**
 
 ### **A. Nexus Overview (Dashboard Home)**
 
-Ini adalah halaman pertama setelah login. Menampilkan statistik vital sistem.
+This is the landing page after login, displaying vital system statistics.
 
-* **Pulse Metrics:** Jumlah total *Projects*, *Photos*, dan *Unread Messages*.  
-* **Database Status:** Indikator kesehatan koneksi Supabase (Latency & Uptime).  
-* **Recent Activity:** Log aktivitas terbaru (misal: "New Project 'Dungeon-API' created at 02:45 UTC").
+* **Pulse Metrics:** Total number of *Projects*, *Photos*, and *Unread Messages*.  
+* **Database Status:** Healthy Supabase connection indicator (Latency & Uptime).  
+* **Recent Activity:** Latest activity log (e.g., "New Project 'Dungeon-API' created at 02:45 UTC").
 
 ### **B. The Archivist (Project Manager)**
 
-Modul untuk mengelola "Constructs".
+Module for managing "Constructs".
 
-* **Table View:** Daftar proyek dengan kolom: *Title*, *Mana Cost*, *Stack*, dan *Status*.  
-* **Editor:** Form untuk input metadata proyek. Karena konten utama berada di file MDX, editor ini fokus pada pengelolaan *entry* di database Supabase.  
-* **Tech Linker:** UI khusus (seperti *tagging system*) untuk menghubungkan proyek dengan entitas di tabel tech\_stack.
+* **Table View:** List of projects with columns: *Title*, *Mana Cost*, *Stack*, and *Status*.  
+* **Editor:** Form for inputting project metadata. Since the main content resides in MDX files, this editor focuses on managing entries in the Supabase database.  
+* **Tech Linker:** Specialized UI (like a *tagging system*) to link projects with entities in the `tech_stack` table.
 
 ### **C. The Memory Keeper (Photography Manager)**
 
-Modul untuk mengelola "Echoes".
+Module for managing "Echoes".
 
-* **Gallery Grid:** Tampilan thumbnail foto-foto yang sudah diunggah.  
-* **Magic Upload:** Area *Drag-and-drop* yang terintegrasi langsung dengan **Cloudinary API**. Begitu foto diunggah, sistem otomatis menjalankan library exifr untuk mengisi kolom exif\_data di database.  
-* **Category Tagger:** Memindahkan foto antar kategori (Forest, Dungeon, Night, etc).
+* **Gallery Grid:** Thumbnail view of uploaded photos.  
+* **Magic Upload:** *Drag-and-drop* area directly integrated with the **Cloudinary API**. Once a photo is uploaded, the system automatically runs the `exifr` library to populate the `exif_data` columns in the database.  
+* **Category Tagger:** Move photos between categories (Forest, Dungeon, Night, etc).
 
 ### **D. Signal Receiver (Message Center)**
 
-Modul untuk membaca pesan yang masuk dari section "Signal" di Home.
+Module for reading incoming messages from the "Signal" section on the Home page.
 
-* **Inbox Interface:** Desain minimalis mirip terminal. Pesan yang belum dibaca akan memiliki efek *glow* di sekitarnya.  
-* **Quick Action:** Tombol untuk menandai pesan sebagai *read*, *archive*, atau menghapusnya.
+* **Inbox Interface:** Minimalist design resembling a terminal. Unread messages will have a *glow* effect around them.  
+* **Quick Action:** Buttons to mark messages as *read*, *archive*, or delete them.
 
-## **3\. Spesifikasi Teknis & Library Rekomendasi**
+## **3. Technical Specifications & Recommended Libraries**
 
-Untuk membangun ini dengan cepat namun tetap *high-performance*:
+To build this quickly yet maintain *high-performance*:
 
-* **UI Framework:** **Shadcn/UI**. Sangat terstruktur, mudah dikustomisasi, dan sangat cocok dengan Next.js.  
-* **State Management:** **TanStack Query (React Query)**. Penting untuk menangani *caching* data dari Supabase agar transisi antar halaman dashboard terasa instan.  
-* **Form Handling:** **React Hook Form \+ Zod**. Untuk validasi data yang ketat (Backend-minded validation).  
-* **Icons:** **Lucide React**. Ikon yang tajam dan minimalis.  
-* **Charts:** **Tremor** atau **Recharts**. Jika Anda ingin memvisualisasikan data (misal: tren pesan masuk atau statistik tech stack).
+* **UI Framework:** **Shadcn/UI**. Highly structured, easily customizable, and perfectly suited for Next.js.  
+* **State Management:** **TanStack Query (React Query)**. Essential for handling data *caching* from Supabase so that transitions between dashboard pages feel instant.  
+* **Form Handling:** **React Hook Form + Zod**. For strict data validation (Backend-minded validation).  
+* **Icons:** **Lucide React**. Sharp and minimalist icons.  
+* **Charts:** **Tremor** or **Recharts**. If you wish to visualize data (e.g., incoming message trends or tech stack statistics).
 
-## **4\. Keamanan & Akses (The Gatekeeper)**
+## **4. Security & Access (The Gatekeeper)**
 
-Dashboard ini akan berada di rute /sanctum atau /admin dan diproteksi secara berlapis:
+The dashboard will be located at the `/sanctum` or `/admin` routes and protected with multiple layers:
 
-1. **Authentication:** Menggunakan **Supabase Auth**. Hanya email Anda yang terdaftar sebagai admin yang bisa masuk.  
-2. **Authorization (RLS):** Database secara otomatis menolak semua permintaan INSERT/UPDATE/DELETE dari user yang tidak memiliki role \= 'admin' di tabel profiles.  
-3. **Middleware Guard:** Next.js Middleware akan memeriksa sesi user sebelum merender halaman admin. Jika tidak valid, user akan dilempar kembali ke halaman [./evilmagics].
+1. **Authentication:** Using **Supabase Auth**. Only your registered email as an admin can gain access.  
+2. **Authorization (RLS):** The database automatically rejects all INSERT/UPDATE/DELETE requests from users who do not have `role = 'admin'` in the `profiles` table.  
+3. **Middleware Guard:** Next.js Middleware will check the user session before rendering admin pages. If invalid, the user will be redirected back to the [./evilmagics] home page.
 
-## **5\. Fitur Eksklusif Admin: "The Command Palette"**
+## **5. Exclusive Admin Feature: "The Command Palette"**
 
-Sebagai seorang *engineer*, Anda mungkin lebih menyukai navigasi cepat via keyboard:
+As an *engineer*, you might prefer fast navigation via keyboard:
 
-* Implementasi **Command Palette (CMD+K)**.  
-* Anda bisa menekan CMD+K lalu mengetik "New Project", "Read Messages", atau "Go to Gallery" untuk berpindah modul secara instan tanpa menyentuh mouse.
+* Implementation of **Command Palette (CMD+K)**.  
+* You can press CMD+K and type "New Project", "Read Messages", or "Go to Gallery" to switch modules instantly without touching the mouse.

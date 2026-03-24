@@ -1,85 +1,85 @@
-# Deployment ke Vercel
+# Vercel Deployment
 
-Runbook ini menyiapkan deploy Next.js ke Vercel dengan pendekatan aman (secret via Vercel Environment Variables, tanpa hard-code credential).
+This runbook prepares the Next.js deployment to Vercel using a secure approach (secrets via Vercel Environment Variables, no hard-coded credentials).
 
-## 1) Prasyarat
+## 1) Prerequisites
 
-- Node.js dan npm sudah terpasang.
-- Akun Vercel aktif.
-- Proyek ini sudah bisa build lokal dengan `npm run build`.
+- Node.js and npm installed.
+- Active Vercel account.
+- Project can be built locally using `npm run build`.
 
 ## 2) Environment Variables
 
-Gunakan template dari `.env.example`, lalu set di Vercel (Project Settings → Environment Variables):
+Use the template from `.env.example`, then set them in Vercel (Project Settings → Environment Variables):
 
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 - `CLOUDINARY_CLOUD_NAME`
 - `CLOUDINARY_API_KEY`
 - `CLOUDINARY_API_SECRET`
-- `CLOUDINARY_UPLOAD_FOLDER` (opsional, default fallback di kode: `grimoire/projects`)
+- `CLOUDINARY_UPLOAD_FOLDER` (optional, default fallback in code: `grimoire/projects`)
 
-> Rekomendasi: set untuk semua environment yang relevan (`Production`, `Preview`, `Development`) sesuai kebutuhan.
+> Recommendation: Set these for all relevant environments (`Production`, `Preview`, `Development`) as needed.
 
-## 3) Link project ke Vercel (sekali saja)
+## 3) Link Project to Vercel (One-time)
 
 ```bash
 npx vercel login
 npx vercel link
 ```
 
-Saat prompt muncul:
-- Pilih scope/account yang benar
-- Pilih project existing atau buat baru
-- Framework akan terdeteksi sebagai Next.js
+When prompts appear:
+- Choose the correct scope/account.
+- Choose an existing project or create a new one.
+- The framework will be detected as Next.js.
 
-## 4) Deploy preview
+## 4) Preview Deployment
 
 ```bash
 npx vercel
 ```
 
-Perintah ini menghasilkan deployment preview URL untuk validasi cepat.
+This command generates a deployment preview URL for quick validation.
 
-## 5) Deploy production (immutable)
+## 5) Production Deployment (Immutable)
 
 ```bash
 npx vercel --prod
 ```
 
-Simpan URL deployment dan deployment ID untuk audit trail.
+Save the deployment URL and deployment ID for the audit trail.
 
-## 6) Verifikasi pasca deploy
+## 6) Post-Deployment Verification
 
-Checklist minimal:
-- Halaman publik: `/`, `/projects`, `/gallery`
-- Dashboard admin: `/admin`, `/admin/projects`, `/admin/gallery`, `/admin/messages`
-- Upload media Cloudinary pada alur admin berjalan normal
-- Integrasi Supabase read/write berjalan normal
-- Header keamanan aktif sesuai `vercel.json`
+Minimum checklist:
+- Public pages: `/`, `/projects`, `/gallery`
+- Admin dashboard: `/admin`, `/admin/projects`, `/admin/gallery`, `/admin/messages`
+- Cloudinary media upload in the admin flow works normally.
+- Supabase read/write integration works normally.
+- Security headers are active according to `vercel.json`.
 
 ## 7) Rollback
 
-### Opsi A: Promote deployment sebelumnya (disarankan)
-1. Buka Vercel Dashboard → Project → Deployments
-2. Pilih deployment stabil terakhir
-3. Klik **Promote to Production**
+### Option A: Promote Previous Deployment (Recommended)
+1. Open Vercel Dashboard → Project → Deployments.
+2. Select the last stable deployment.
+3. Click **Promote to Production**.
 
-### Opsi B: Redeploy commit stabil
+### Option B: Redeploy Stable Commit
 
 ```bash
 git checkout <stable-commit>
 npx vercel --prod
 ```
 
-## 8) Catatan kualitas saat ini
+## 8) Current Quality Notes
 
-- `npm run build` ✅ berhasil
-- `npm run lint` ❌ masih ada error lint yang perlu dibereskan sebelum gate lint diberlakukan ketat di CI
-- Next.js memberi warning bahwa konvensi `middleware` sudah deprecated dan dianjurkan migrasi ke `proxy`
+- `npm run build` ✅ Success
+- `npm run lint` ❌ Still has lint errors that need to be resolved before enforcing strict lint gates in CI.
+- Next.js warning: The `middleware` convention is deprecated; migration to `proxy` is recommended.
 
-## 9) CI/CD (opsional, direkomendasikan)
+## 9) CI/CD (Optional, Recommended)
 
-- Hubungkan repository Git ke Vercel agar deploy preview otomatis tiap Pull Request.
-- Aktifkan protection branch + required checks (`lint`, `build`) sebelum merge ke production branch.
-- Simpan seluruh secret hanya di Vercel Environment Variables/managed secret store.
+- Connect the Git repository to Vercel for automatic preview deployments on every Pull Request.
+- Enable branch protection + required checks (`lint`, `build`) before merging into the production branch.
+- Store all secrets only in Vercel Environment Variables/managed secret store.

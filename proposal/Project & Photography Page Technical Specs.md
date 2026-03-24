@@ -1,62 +1,62 @@
-# **Spesifikasi Teknis: Sub-Halaman Portofolio**
+# **Technical Specifications: Portfolio Sub-Pages**
 
-Dokumen ini merinci implementasi teknis untuk halaman List Project dan List Fotografi dalam portofolio "The Silent Architect's Grimoire".
+This document details the technical implementation for the Project List and Photography List pages in "The Silent Architect's Grimoire" portfolio.
 
-## **1\. The Blueprint Vault (Halaman List Seluruh Project)**
+## **1. The Blueprint Vault (Project List Page)**
 
-Halaman ini dirancang sebagai arsip digital yang mendalam bagi semua karya teknis Anda.
+This page is designed as a deep digital archive for all your technical work.
 
 ### **A. The Archivist's Interface (Header & Filter)**
 
-* **Konsep Visual:** Bar pencarian minimalis yang terlihat seperti *input terminal* dengan filter berbasis kategori (Magic/Languages).  
-* **Detail Teknis:**  
-  * **State Management:** Menggunakan URL Params (Next.js useSearchParams) untuk menyimpan *state* filter agar halaman tetap bisa di-*bookmark* atau dibagikan dengan filter tertentu.  
-  * **Fuzzy Search:** Implementasi library Fuse.js di sisi client untuk pencarian cepat pada metadata proyek tanpa perlu melakukan *request* database berulang kali.
+* **Visual Concept:** A minimalist search bar that looks like a *terminal input* with category-based filters (Magic/Languages).  
+* **Technical Details:**  
+  * **State Management:** Using URL Params (Next.js `useSearchParams`) to store filter states so the page remains bookmarkable or shareable with specific filters.  
+  * **Fuzzy Search:** Implementation of the `Fuse.js` library on the client side for fast searching across project metadata without repeated database requests.
 
 ### **B. The Relic Grid (List Card)**
 
-* **Konsep Visual:** Kartu-kartu proyek yang tersusun rapi. Saat *hover*, muncul garis-garis "pembuluh darah" (aliran data) yang menghubungkan antar komponen di dalam kartu.  
-* **Detail Teknis:**  
-  * **Layout:** CSS Grid dengan sistem *responsive columns* (Tailwind grid-cols-1 md:grid-cols-2 lg:grid-cols-3).  
-  * **Dynamic Content:** Setiap kartu mengambil metadata dari file MDX (Markdown) menggunakan gray-matter. Metadata mencakup: title, tech\_stack, performance\_metrics, dan complexity\_level.  
-  * **Hover Effect:** Menggunakan Framer Motion untuk *layout-id* transition agar saat kartu diklik, ia bisa beralih ke tampilan detail dengan animasi yang mulus.
+* **Visual Concept:** Organized project cards. On *hover*, "vein-like" lines (data flows) appear, connecting various components within the card.  
+* **Technical Details:**  
+  * **Layout:** CSS Grid with a responsive column system (Tailwind `grid-cols-1 md:grid-cols-2 lg:grid-cols-3`).  
+  * **Dynamic Content:** Each card fetches metadata from MDX files using `gray-matter`. Metadata includes: `title`, `tech_stack`, `performance_metrics`, and `complexity_level`.  
+  * **Hover Effect:** Using Framer Motion for `layout-id` transitions so that when a card is clicked, it can seamlessly transition to the detail view.
 
 ### **C. Technical Anatomy (Project Detail/Modal)**
 
-* **Konsep Visual:** Dokumentasi teknis yang kaya. Bukan sekadar deskripsi, tapi penjelasan arsitektur.  
-* **Detail Teknis:**  
-  * **Content Engine:** MDXRemote untuk merender file Markdown menjadi komponen React. Anda bisa menyisipkan diagram interaktif di tengah-tengah teks dokumentasi.  
-  * **Code Highlighting:** Menggunakan Rehype-pretty-code dengan tema *Dark/Obsidian* untuk menampilkan blok kode backend (Go/Python) agar terlihat elegan.
+* **Visual Concept:** Rich technical documentation. Not just a description, but an architectural explanation.  
+* **Technical Details:**  
+  * **Content Engine:** `MDXRemote` to render Markdown files into React components. You can embed interactive diagrams within the documentation text.  
+  * **Code Highlighting:** Using `rehype-pretty-code` with a *Dark/Obsidian* theme for displaying backend code blocks (Go/Python) elegantly.
 
-## **2\. The Moonlit Gallery (Halaman List Seluruh Fotografi)**
+## **2. The Moonlit Gallery (Photography List Page)**
 
-Halaman ini fokus pada imersi visual dan keindahan alam dalam kegelapan.
+This page focuses on visual immersion and the beauty of nature in darkness.
 
 ### **A. The Fog Veil (Header & Transition)**
 
-* **Konsep Visual:** Efek transisi kabut yang menutupi bagian atas galeri, memberikan kesan foto-foto muncul dari balik kegelapan hutan.  
-* **Detail Teknis:**  
-  * **CSS Masking:** Menggunakan mask-image dengan *linear-gradient* transparan untuk menciptakan efek "kabut" yang menyatu dengan *background* gelap website.  
-  * **Parallax:** Judul "Echoes" bergerak sedikit lebih lambat dari konten galeri saat di-*scroll* untuk efek kedalaman.
+* **Visual Concept:** A fog transition effect covering the top of the gallery, giving the impression that photos emerge from behind the forest's darkness.  
+* **Technical Details:**  
+  * **CSS Masking:** Using `mask-image` with a transparent `linear-gradient` to create a "fog" effect that blends with the website's dark background.  
+  * **Parallax:** The title "Echoes" moves slightly slower than the gallery content during scrolling for a sense of depth.
 
 ### **B. The Infinite Memory (Masonry Gallery)**
 
-* **Konsep Visual:** Layout foto yang asimetris (Masonry), memberikan kesan fragmen memori yang tersebar secara artistik.  
-* **Detail Teknis:**  
-  * **Library:** react-plock atau implementasi kustom menggunakan CSS columns untuk memastikan performa *rendering* tetap ringan.  
-  * **Optimasi Gambar:** Integrasi dengan **Cloudinary SDK**. Foto akan dikirim dalam format .webp atau .avif dengan ukuran yang disesuaikan secara otomatis berdasarkan *device* user (srcSet).  
-  * **Infinite Scroll:** Menggunakan React Intersection Observer untuk melakukan *lazy loading* batch foto berikutnya hanya saat user mencapai bagian bawah halaman.
+* **Visual Concept:** Asymmetrical photo layout (Masonry), giving the impression of scattered artistic memory fragments.  
+* **Technical Details:**  
+  * **Library:** `react-plock` or a custom implementation using CSS columns to ensure rendering performance remains lightweight.  
+  * **Image Optimization:** Integration with the **Cloudinary SDK**. Photos are delivered in `.webp` or `.avif` formats with sizes automatically adjusted based on the user's device (`srcSet`).  
+  * **Infinite Scroll:** Using `react-intersection-observer` to lazy load the next batch of photos only when the user reaches the bottom of the page.
 
 ### **C. The Soul of the Frame (Light-Box & Metadata)**
 
-* **Konsep Visual:** Saat foto diklik, ia akan tampil penuh. Di sudut bawah, muncul metadata teknis yang terlihat seperti *script* sistem.  
-* **Detail Teknis:**  
-  * **Dynamic UI:** Mengekstrak warna dominan dari foto menggunakan node-vibrant secara *real-time* untuk mengubah warna *overlay* atau aksen teks metadata.  
-  * **EXIF Reader:** Metadata (ISO, Shutter, Aperture) diambil secara otomatis dari file gambar menggunakan library exifr agar Anda tidak perlu menginputnya secara manual ke database.
+* **Visual Concept:** When a photo is clicked, it expands to full view. In the bottom corner, technical metadata appears, looking like a system script.  
+* **Technical Details:**  
+  * **Dynamic UI:** Extracting dominant colors from the photo using `node-vibrant` in real-time to change the overlay or metadata text accent colors.  
+  * **EXIF Reader:** Metadata (ISO, Shutter, Aperture) is automatically extracted from image files using the `exifr` library, so you don't need to input it manually into the database.
 
-## **3\. Integrasi Backend (The Core Connection)**
+## **3. Backend Integration (The Core Connection)**
 
-Kedua halaman ini akan terhubung ke **Supabase** sebagai sumber kebenaran data.
+Both pages connect to **Supabase** as the source of truth for data.
 
-* **Proyek:** Disimpan sebagai file .mdx di dalam folder /projects agar mudah dikelola melalui Git (Contentlayer).  
-* **Fotografi:** Metadata foto (URL, Caption, Category) disimpan di tabel public.photos di Supabase, sementara file aslinya berada di **Cloudinary** untuk optimasi CDN.
+* **Projects:** Stored as `.mdx` files within the `/projects` folder for easy management via Git (Contentlayer).  
+* **Photography:** Photo metadata (URL, Caption, Category) is stored in the `public.photos` table in Supabase, while the original files are hosted on **Cloudinary** for CDN optimization.

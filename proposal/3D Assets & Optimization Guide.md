@@ -1,34 +1,36 @@
-# **Panduan Aset 3D: The Spirit Manifest**
+# **3D Asset Guide: The Spirit Manifest**
 
-Dokumen ini berisi sumber referensi aset dan langkah teknis untuk mempersiapkan model 3D agar siap digunakan dalam sistem partikel "The Silent Architect".
+This document contains asset reference sources and technical steps to prepare 3D models for use in "The Silent Architect" particle system.
 
-## **1\. Sumber Aset (Recommended Resources)**
+## **1. Recommended Resources**
 
-Karena kita membutuhkan siluet yang elegan namun ringan, carilah model dengan kategori **Low-Poly** atau **Sculpt**.
+Since we need elegant yet lightweight silhouettes, look for models in the **Low-Poly** or **Sculpt** categories.
 
-* **Poly Pizza (poly.pizza):** Cari "Wolf" atau "Tiger". Biasanya tersedia dalam format .glb yang sangat bersih.  
-* **Sketchfab:** Cari "White Wolf" atau "Spirit Animal". Pastikan lisensinya *Creative Commons* (CC BY).  
-* **Quaternius (quaternius.com):** Menyediakan paket hewan "Ultimate Nature Pack" yang memiliki model serigala dan harimau dengan topologi yang sangat baik untuk web.
+* **Poly Pizza (poly.pizza):** Search for "Wolf" or "Tiger". Usually available in very clean .glb format.  
+* **Sketchfab:** Search for "White Wolf" or "Spirit Animal". Ensure the license is *Creative Commons* (CC BY).  
+* **Quaternius (quaternius.com):** Provides the "Ultimate Nature Pack" which has wolf and tiger models with excellent topology for the web.
 
-## **2\. Spesifikasi Aset yang Dibutuhkan**
+## **2. Required Asset Specifications**
 
-Untuk mendapatkan efek partikel yang tajam namun tetap *performant*:
+To achieve sharp yet performant particle effects:
 
-* **Format:** .glb atau .gltf (Paling efisien untuk web).  
-* **Polygon Count:** Idealnya di bawah 10,000 tris. Karena kita hanya mengambil *vertices*\-nya, kita tidak butuh detail tekstur yang rumit.  
-* **Position:** Pastikan model berada di titik koordinat (0,0,0) di Blender sebelum di-export.
+* **Format:** .glb or .gltf (Most efficient for the web).  
+* **Polygon Count:** Ideally under 10,000 tris. Since we only take the *vertices*, we don't need complex texture details.  
+* **Position:** Ensure the model is at the origin (0,0,0) in Blender before exporting.
 
-## **3\. Workflow Optimasi (Expert Tip)**
+## **3. Optimization Workflow (Expert Tip)**
 
-Gunakan tool CLI gltf-pipeline untuk mengecilkan ukuran file:
+Use the `gltf-pipeline` CLI tool to reduce file size:
 
-npx gltf-pipeline \-i model.glb \-o spirit\_model.glb \-d
+```bash
+npx gltf-pipeline -i model.glb -o spirit_model.glb -d
+```
 
-Opsi \-d akan menerapkan kompresi Draco, yang bisa mengecilkan ukuran file hingga 70-90%.
+The `-d` option applies Draco compression, which can reduce file size by 70-90%.
 
-## **4\. Konsep Visual: "The Spirit Glow"**
+## **4. Visual Concept: "The Spirit Glow"**
 
-Jangan gunakan warna solid. Gunakan material dengan *additive blending* pada partikelnya.
+Do not use solid colors. Use materials with *additive blending* for the particles.
 
-* **Color:** \#E0E0E0 (Mist White) dengan sedikit emisi \#00E5FF (Mana Glow).  
-* **Texture:** Gunakan gambar lingkaran kecil buram (soft circle) sebagai *alpha map* untuk setiap partikel agar tidak terlihat seperti kotak-kotak kasar.
+* **Color:** #E0E0E0 (Mist White) with a slight emission of #00E5FF (Mana Glow).  
+* **Texture:** Use a soft blurred circle image as an *alpha map* for each particle so they don't look like rough squares.

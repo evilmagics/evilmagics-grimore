@@ -1,41 +1,42 @@
 # **Login Page Concept: The Void Threshold**
 
-Dokumen ini merinci konsep kreatif dan teknis untuk halaman autentikasi portofolio "The Silent Architect's Grimoire".
+This document details the creative and technical concepts for the authentication page of "The Silent Architect's Grimoire" portfolio.
 
-## **1\. Konsep Visual: "The Gate of Aether"**
+## **1. Visual Concept: "The Gate of Aether"**
 
-Halaman ini harus terasa seperti momen sebelum sebuah "Magic Circle" aktif sepenuhnya. Minimalis, namun penuh dengan energi yang tertahan.
+This page should feel like the moment before a "Magic Circle" is fully activated. Minimalist, yet full of restrained energy.
 
-* **Background:** Gelap total (\#050505) dengan efek *vignette* yang kuat. Di tengah layar, terdapat kabut tipis (fog) yang bergerak sangat pelan menggunakan *Three.js* atau *Canvas*.  
-* **The Portal (Login Card):** Sebuah kotak transparan (Glassmorphism) dengan *border* tipis yang hanya menyala (glow) berwarna perak saat kursor mendekat.  
-* **Spirit Guardian:** Siluet transparan harimau atau serigala putih muncul sekilas di latar belakang setiap kali user salah memasukkan *password*, seolah-olah sedang menghalangi penyusup.
+*   **Background:** Total darkness (#050505) with a strong *vignette* effect. In the center of the screen, a thin fog moves slowly using *Three.js* or *Canvas*.
+*   **The Portal (Login Card):** A transparent (Glassmorphism) box with a thin border that only glows silver when the cursor approaches.
+*   **Spirit Guardian:** Transparent silhouettes of a white tiger or wolf appear briefly in the background whenever a user enters an incorrect *password*, as if blocking an intruder.
 
-## **2\. UX Flow: "The Decryption Ritual"**
+## **2. UX Flow: "The Decryption Ritual"**
 
-Proses login dirancang untuk memberikan sensasi "mengaktifkan sistem kuno".
+The login process is designed to provide the sensation of "activating an ancient system".
 
-1. **Initial State:** Layar hanya menampilkan satu baris teks: \[ SYSTEM LOCKED. IDENTIFY YOURSELF \].  
-2. **Input Reveal:** Saat user menekan tombol apa saja atau mengklik layar, form login muncul dengan animasi *fade-in* yang halus.  
-3. **The Input:** \* **Email:** Muncul dengan label \[ UID \].  
-   * **Password:** Saat diketik, karakter yang muncul bukan titik hitam, melainkan simbol rune kecil yang berubah-ubah secara acak sebelum akhirnya tersembunyi.  
-4. **Submission:** Tombol login bertuliskan \[ AUTHORIZE \]. Saat diklik, tombol akan "berdenyut" dengan cahaya biru mana selama proses verifikasi.
+1.  **Initial State:** The screen displays only one line of text: \[ SYSTEM LOCKED. IDENTIFY YOURSELF \].
+2.  **Input Reveal:** When the user presses any key or clicks the screen, the login form appears with a smooth *fade-in* animation.
+3.  **The Input:**
+    *   **Email:** Appears with the label \[ UID \].
+    *   **Password:** When typed, the characters appearing are not black dots, but small rune symbols that change randomly before finally being hidden.
+4.  **Submission:** The login button is labeled \[ AUTHORIZE \]. When clicked, the button "pulses" with mana-blue light during the verification process.
 
-## **3\. Fitur Keamanan & Detail Teknis**
+## **3. Security Features & Technical Details**
 
-Sebagai *Backend Developer*, Anda tentu mengutamakan keamanan di balik estetika visual ini.
+As a *Backend Developer*, you prioritize security behind this visual aesthetic.
 
-* **Supabase Auth Integration:** Menggunakan signInWithPassword dari Supabase. Sesi akan dikelola secara aman menggunakan *HttpOnly Cookies* melalui Next.js Middleware.  
-* **Brute Force Protection:**  
-  * **Rate Limiting:** Menggunakan middleware untuk membatasi percobaan login dari IP yang sama (maksimal 5 kali dalam 15 menit).  
-  * **Honeypot Field:** Menambahkan input tersembunyi untuk menjebak bot otomatis yang mencoba melakukan *form-filling*.  
-* **Decryption Animation:** Menggunakan library framer-motion untuk efek teks yang "bergetar" jika autentikasi gagal, menyerupai sistem yang sedang mengalami *error* atau penolakan magis.
+*   **Supabase Auth Integration:** Using `signInWithPassword` from Supabase. Sessions will be managed securely using *HttpOnly Cookies* via Next.js Middleware.
+*   **Brute Force Protection:**
+    *   **Rate Limiting:** Using middleware to limit login attempts from the same IP (maximum 5 times in 15 minutes).
+    *   **Honeypot Field:** Adding a hidden input to trap automated bots attempting *form-filling*.
+    *   **Decryption Animation:** Using the `framer-motion` library for a "vibrating" text effect if authentication fails, resembling a system experiencing an error or magical rejection.
 
-## **4\. UI Elements (Shadcn/UI Customization)**
+## **4. UI Elements (Shadcn/UI Customization)**
 
-* **Inputs:** Tanpa *background*, hanya garis bawah (border-bottom) yang menyala saat aktif.  
-* **Loading State:** Alih-alih *spinner*, gunakan garis *progress* horizontal tipis di bagian paling atas layar yang bergerak dari kiri ke kanan dengan warna *Mana Glow*.  
-* **Error Message:** Muncul dalam kode status sistem, misalnya: \[ ERROR 403: UNAUTHORIZED ESSENCE DETECTED \].
+*   **Inputs:** Backgroundless, with only an underline (border-bottom) that glows when active.
+*   **Loading State:** Instead of a *spinner*, use a thin horizontal progress line at the very top of the screen moving from left to right with a *Mana Glow* color.
+*   **Error Message:** Appears as a system status code, for example: \[ ERROR 403: UNAUTHORIZED ESSENCE DETECTED \].
 
-## **5\. Metadata & SEO**
+## **5. Metadata & SEO**
 
-* **No-Index:** Halaman login ini akan dipasang tag \<meta name="robots" content="noindex, nofollow"\> agar tidak muncul di mesin pencari seperti Google, menjaga kerahasiaan "The Inner Sanctum".
+*   **No-Index:** This login page will have a `<meta name="robots" content="noindex, nofollow">` tag to prevent it from appearing in search engines like Google, maintaining the secrecy of "The Inner Sanctum".

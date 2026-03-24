@@ -1,10 +1,10 @@
 # **Database Schema: The Core Architecture (Supabase/PostgreSQL)**
 
-Dokumen ini merinci struktur database untuk portofolio "The Silent Architect's Grimoire", mencakup relasi antar entitas dan konfigurasi keamanan yang disesuaikan dengan UI Home yang sudah ada.
+This document details the database structure for "The Silent Architect's Grimoire" portfolio, covering entity relationships and security configurations tailored to the existing Home UI.
 
-## **1\. Entity Relationship Diagram (ERD) \- Logika Relasional**
+## **1. Entity Relationship Diagram (ERD) - Relational Logic**
 
-Secara struktural, database ini berpusat pada entitas projects dan photos. Skema dirancang agar bersifat *extensible* dan mendukung performa query yang tinggi dengan metadata yang kaya.
+Structurally, this database centers around the `projects` and `photos` entities. The schema is designed to be *extensible* and support high-performance queries with rich metadata.
 
 ```mermaid
 erDiagram
@@ -28,7 +28,7 @@ erDiagram
         string slug
         string summary
         text description
-        string mdx_path "Path ke file MDX di Git"
+        string mdx_path "Path to MDX file in Git"
         string cover_url
         string cover_gradient "CSS Gradient string"
         integer mana_cost "Complexity Level 1-100"
@@ -74,11 +74,11 @@ erDiagram
     }
 ```
 
-## **2\. Skema Tabel Detail**
+## **2. Detailed Table Schema**
 
-### **A. Modul: Identity & Auth (Profiles)**
+### **A. Module: Identity & Auth (Profiles)**
 
-Meskipun Supabase mengelola tabel `auth.users`, kita memerlukan tabel `profiles` di schema `public` untuk menyimpan info tambahan yang ditampilkan di frontend.
+While Supabase manages the `auth.users` table, we need a `profiles` table in the `public` schema to store additional information displayed on the frontend.
 
 ```sql
 CREATE TABLE public.profiles (
@@ -87,14 +87,14 @@ CREATE TABLE public.profiles (
   full_name TEXT,
   avatar_url TEXT,
   bio TEXT,
-  role TEXT DEFAULT 'observer', -- 'admin' untuk akses penuh
+  role TEXT DEFAULT 'observer', -- 'admin' for full access
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now())
 );
 ```
 
-### **B. Modul: Knowledge (Projects & Tech Stack)**
+### **B. Module: Knowledge (Projects & Tech Stack)**
 
-Proyek didefinisikan sebagai "Constructs" dalam Grimoire. Menggunakan tabel *junction* untuk relasi Many-to-Many antara Proyek dan Teknologi.
+Projects are defined as "Constructs" within the Grimoire. Uses a junction table for a Many-to-Many relationship between Projects and Technologies.
 
 ```sql
 CREATE TABLE public.tech_stack (
@@ -102,22 +102,22 @@ CREATE TABLE public.tech_stack (
   name TEXT NOT NULL,
   category TEXT NOT NULL, -- 'Languages', 'Frameworks & UI', 'Databases', etc
   sub_category TEXT, -- 'Compiled', 'Fullstack', 'SQL', etc
-  icon_key TEXT, -- Nama component dari react-icons/si atau react-icons/fa
+  icon_key TEXT, -- Component name from react-icons/si or react-icons/fa
   is_active BOOLEAN DEFAULT true
 );
 
 CREATE TABLE public.projects (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  idx TEXT UNIQUE NOT NULL, -- Contoh: 'CONSTRUCT_001'
+  idx TEXT UNIQUE NOT NULL, -- Example: 'CONSTRUCT_001'
   title TEXT NOT NULL,
   slug TEXT UNIQUE NOT NULL,
   summary TEXT,
-  description TEXT, -- Penjelasan mendalam untuk UI detail
-  mdx_path TEXT, -- Link ke file MDX di repository untuk konten statis
+  description TEXT, -- Deep explanation for detail UI
+  mdx_path TEXT, -- Link to MDX file in repository for static content
   cover_url TEXT,
-  cover_gradient TEXT, -- String gradient seperti 'linear-gradient(...)'
-  mana_cost INTEGER DEFAULT 10, -- 1-100 (Abstraksi tingkat kesulitan)
-  tags TEXT[], -- Array of strings untuk system tags
+  cover_gradient TEXT, -- Gradient string like 'linear-gradient(...)'
+  mana_cost INTEGER DEFAULT 10, -- 1-100 (Difficulty level abstraction)
+  tags TEXT[], -- Array of strings for system tags
   live_url TEXT,
   repo_url TEXT,
   featured BOOLEAN DEFAULT false,
@@ -132,9 +132,9 @@ CREATE TABLE public.project_tech (
 );
 ```
 
-### **C. Modul: Memories (Photography)**
+### **C. Module: Memories (Photography)**
 
-Modul "Echoes" menyimpan metadata foto yang dirender sebagai hologram semi-transparan.
+The "Echoes" module stores photo metadata rendered as semi-transparent holograms.
 
 ```sql
 CREATE TABLE public.photo_categories (
@@ -145,11 +145,11 @@ CREATE TABLE public.photo_categories (
 CREATE TABLE public.photos (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   title TEXT,
-  cloudinary_id TEXT, -- ID Cloudinary (jika menggunakan Cloudinary)
-  image_url TEXT, -- Cadangan jika tidak menggunakan Cloudinary secara langsung
-  gradient TEXT, -- Background gradient untuk default hologram state
-  aspect TEXT DEFAULT '4/3', -- Rasio aspek (16/9, 4/3, 1/1)
-  exif_data JSONB, -- Menyimpan data aperture, shutter, iso, focal
+  cloudinary_id TEXT, -- Cloudinary ID
+  image_url TEXT, -- Fallback URL
+  gradient TEXT, -- Background gradient for default hologram state
+  aspect TEXT DEFAULT '4/3', -- Aspect ratio (16/9, 4/3, 1/1)
+  exif_data JSONB, -- Stores aperture, shutter, iso, focal data
   category_id UUID REFERENCES public.photo_categories(id),
   featured BOOLEAN DEFAULT false,
   captured_at TIMESTAMP WITH TIME ZONE,
@@ -157,9 +157,9 @@ CREATE TABLE public.photos (
 );
 ```
 
-### **D. Modul: Communication (Signals)**
+### **D. Module: Communication (Signals)**
 
-Terminal "Signal" di Home mentransmisikan pesan langsung ke database.
+The "Signal" terminal on the Home page transmits messages directly to the database.
 
 ```sql
 CREATE TABLE public.messages (
@@ -168,31 +168,31 @@ CREATE TABLE public.messages (
   subject TEXT,
   content TEXT NOT NULL,
   is_read BOOLEAN DEFAULT false,
-  ip_address TEXT, -- Untuk rate limiting / security audit
+  ip_address TEXT, -- For rate limiting / security audit
   created_at TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
 ```
 
-## **3\. Keamanan & Row Level Security (RLS)**
+## **3. Security & Row Level Security (RLS)**
 
-Sebagai Admin (Sang Architect), Anda memiliki hak eksklusif untuk memanipulasi data, sementara pengunjung hanya bisa membaca (Read-Only).
+As the Admin (The Architect), you have exclusive rights to manipulate data, while visitors are restricted to Read-Only access.
 
 *   **Profiles:**
-    *   SELECT: Public (untuk info profil architect).
-    *   UPDATE: Hanya pemilik profile (authenticated).
+    *   SELECT: Public (for architect profile info).
+    *   UPDATE: Only the profile owner (authenticated).
 *   **Projects & Tech Stack (Constructs):**
-    *   SELECT: Diizinkan untuk semua (public).
-    *   INSERT/UPDATE/DELETE: Hanya diizinkan untuk user dengan role = 'admin'.
+    *   SELECT: Permitted for everyone (public).
+    *   INSERT/UPDATE/DELETE: Only permitted for users with `role = 'admin'`.
 *   **Photos (Echoes):**
-    *   SELECT: Diizinkan untuk semua (public).
-    *   INSERT/UPDATE/DELETE: Hanya admin.
+    *   SELECT: Permitted for everyone (public).
+    *   INSERT/UPDATE/DELETE: Only admin.
 *   **Messages (Signals):**
-    *   INSERT: Diizinkan untuk semua (Anon/Public).
-    *   SELECT/UPDATE/DELETE: Hanya diizinkan untuk admin.
+    *   INSERT: Permitted for everyone (Anon/Public).
+    *   SELECT/UPDATE/DELETE: Only permitted for admin.
 
-## **4\. Technical Strategy: Why This Way?**
+## **4. Technical Strategy: Why This Way?**
 
-1.  **JSONB for EXIF:** Metadata foto (ISO, Shutter, Lensa) disimpan dalam JSONB karena strukturnya bisa bervariasi tergantung metadata yang tersedia dari file asli, memberikan fleksibilitas tanpa skema kolom yang kaku.
-2.  **MDX Pathing:** Konten naratif proyek yang panjang disimpan di Git sebagai file MDX. Database hanya menyimpan *pointer* (path), menjaga sinkronisasi antara kode sumber dan konten.
-3.  **Mana Cost & IDX:** Penggunaan `mana_cost` (int) dan `idx` (string format) memperkuat tema visual "The Silent Architect", di mana setiap proyek adalah sebuah *construct* dengan biaya energi tertentu.
-4.  **Cover Gradient:** Menyimpan string gradient langsung di DB memungkinkan frontend mernder background hologram yang unik untuk setiap proyek tanpa membebani aset gambar.
+1.  **JSONB for EXIF:** Photo metadata (ISO, Shutter, Lens) is stored in JSONB because the structure can vary depending on available metadata from the original file, providing flexibility without a rigid column schema.
+2.  **MDX Pathing:** Long narrative project content is stored in Git as MDX files. The database only stores pointers (paths), maintaining synchronization between source code and content.
+3.  **Mana Cost & IDX:** The use of `mana_cost` (int) and `idx` (string format) reinforces the visual theme of "The Silent Architect", where each project is a construct with a certain energy cost.
+4.  **Cover Gradient:** Storing gradient strings directly in the DB allows the frontend to render a unique hologram background for each project without burdening image assets.

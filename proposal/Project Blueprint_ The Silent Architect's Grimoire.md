@@ -6,58 +6,58 @@
 
 **Target Audience:** Recruiters, Fellow Engineers, and Art Seekers
 
-## **1\. Persona & Filosofi Desain**
+## **1. Persona & Design Philosophy**
 
-Website ini mencerminkan kepribadian seorang *Backend Developer* yang pendiam namun terstruktur, dengan kecintaan pada elemen *fantasy, magic,* dan *nature photography*.
+This website reflects the personality of a quiet yet structured Backend Developer, with a love for fantasy, magic, and nature photography.
 
 * **The Aesthetic:** "Ancient Tech-Magic".  
 * **The UX Strategy:** *Progressive Disclosure*.  
-* **The Narrative:** Mengeksplorasi sebuah "Grimoire" digital.
+* **The Narrative:** Exploring a digital "Grimoire".
 
-## **2\. Identitas Visual (Atmospheric UI)**
+## **2. Visual Identity (Atmospheric UI)**
 
-* **Palet Warna:** \#050505 (Base), \#1A2F23 (Surface), \#E0E0E0 (Mist White), \#00E5FF (Mana Glow).  
-* **Tipografi:** *Cinzel/Playfair Display* (Headings), *JetBrains Mono* (Technical).
+* **Color Palette:** #050505 (Base), #1A2F23 (Surface), #E0E0E0 (Mist White), #00E5FF (Mana Glow).  
+* **Typography:** *Cinzel/Playfair Display* (Headings), *JetBrains Mono* (Technical).
 
-## **3\. Arsitektur Teknologi (Tech Stack)**
+## **3. Tech Stack**
 
 * **Runtime:** Bun  
 * **Framework:** Next.js 15+ (App Router)  
 * **UI/Animations:** Tailwind CSS, Shadcn/UI, Framer Motion, GSAP, Lenis Scroll.  
 * **Backend/Storage:** Supabase (Postgres & Auth), Drizzle ORM, Cloudinary.
 
-## **4\. Struktur Halaman & Fitur (Halaman Home)**
+## **4. Page Structure & Features**
 
 ### **A. Home (The Summoning Circle)**
 
 * **Hero Section:** Particle system (Spirit Manifest).  
 * **Origin (About):** System Manifest (Decryption text).  
-* **The Core Essences (Tech Stack):** Hexagonal Rune Grid dengan Dependency Graph.  
-* **Constructs Preview:** Architectural Blueprints (3 Proyek Utama).  
-* **Echoes Preview:** Cuplikan galeri foto alam dengan Atmospheric Immersion.  
-* **Signal (Contact):** Interface CLI/Terminal untuk pengiriman pesan ke Supabase.  
-* **System Pulse (Footer):** Bar status minimalis.
+* **The Core Essences (Tech Stack):** Hexagonal Rune Grid with Dependency Graph.  
+* **Constructs Preview:** Architectural Blueprints (3 Main Projects).  
+* **Echoes Preview:** Snippets from the nature gallery with Atmospheric Immersion.  
+* **Signal (Contact):** CLI/Terminal interface for sending messages to Supabase.  
+* **System Pulse (Footer):** Minimalist status bar.
 
 ### **B. Projects (The Blueprint Vault)**
 
-* List portofolio koding dengan Technical Anatomy (MDX).
+* Coding portfolio list with Technical Anatomy (MDX).
 
 ### **C. Photography (The Moonlit Gallery)**
 
-*   Galeri foto alam dengan Masonry Layout dan EXIF Metadata otomatis.
+* Nature gallery with a Masonry Layout and automatic EXIF Metadata.
 
-## **5\. Konsep Navigasi (The Ley Lines)**
+## **5. Navigation Concept (The Ley Lines)**
 
-*   \[./evilmagics] (Home), Constructs (Projects), Echoes (Photos), Signal (Contact).
+* [./evilmagics] (Home), Constructs (Projects), Echoes (Photos), Signal (Contact).
 
-## **6\. Strategi Konten & SEO**
+## **6. Content & SEO Strategy**
 
-*   **Copywriting:** Menggunakan gaya bahasa "Technical-Mystic". Menjelaskan keahlian backend melalui metafora sihir (misal: *API as Summoning Gate*).  
-*   **SEO:** Meta-tags dinamis per halaman proyek menggunakan Next.js generateMetadata.  
-*   **Optimization:** Gambar menggunakan format .webp via Cloudinary, *caching* agresif di sisi server.
+* **Copywriting:** Uses a "Technical-Mystic" style. Explains backend expertise through magic metaphors (e.g., *API as Summoning Gate*).  
+* **SEO:** Dynamic meta-tags per project page using Next.js `generateMetadata`.  
+* **Optimization:** Images using .webp format via Cloudinary, aggressive server-side caching.
 
-## **7\. Alur Deployment (CI/CD)**
+## **7. Deployment Flow (CI/CD)**
 
 1. **Repository:** GitHub.  
-2. **Deployment:** Vercel (Terintegrasi dengan Bun).  
-3. **Database:** Supabase Migration untuk sinkronisasi skema lokal dan production.
+2. **Deployment:** Vercel (Integrated with Bun).  
+3. **Database:** Supabase Migration for synchronizing local and production schemas.
