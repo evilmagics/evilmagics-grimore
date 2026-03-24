@@ -149,7 +149,7 @@ export default function HeroSection() {
             textTransform: "uppercase",
             marginBottom: "1.2rem",
             opacity: 0,
-            animation: "fadeUp 1s 0.5s forwards",
+            animation: "fadeUp 1s 0.1s forwards",
           }}
         >
           :: System initializing . . .
@@ -162,7 +162,7 @@ export default function HeroSection() {
             lineHeight: 1.05,
             marginBottom: "0.45rem",
             opacity: 0,
-            animation: "fadeUp 1s 0.8s forwards",
+            animation: "fadeUp 1s 0.2s forwards",
           }}
         >
           The Silent
@@ -178,7 +178,7 @@ export default function HeroSection() {
             marginBottom: "2.5rem",
             letterSpacing: "0.1em",
             opacity: 0,
-            animation: "fadeUp 1s 1.1s forwards",
+            animation: "fadeUp 1s 0.3s forwards",
           }}
         >
           Conjuring systems from the void
@@ -197,7 +197,7 @@ export default function HeroSection() {
             textDecoration: "none",
             transition: "all 0.4s",
             opacity: 0,
-            animation: "fadeUp 1s 1.4s forwards",
+            animation: "fadeUp 1s 0.4s forwards",
             position: "relative",
             overflow: "hidden",
             background: "transparent",
@@ -230,7 +230,7 @@ export default function HeroSection() {
           gap: "0.5rem",
           zIndex: 2,
           opacity: 0,
-          animation: "fadeUp 1s 2s forwards",
+          animation: "fadeUp 1s 0.6s forwards",
         }}
       >
         <span

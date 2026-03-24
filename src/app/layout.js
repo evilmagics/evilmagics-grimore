@@ -1,5 +1,28 @@
 import "./globals.css";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Cinzel, JetBrains_Mono, Crimson_Text } from 'next/font/google';
+
+const cinzel = Cinzel({
+  subsets: ['latin'],
+  weight: ['400', '600', '700'],
+  variable: '--font-heading',
+  display: 'swap',
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  weight: ['300', '400', '500'],
+  variable: '--font-mono',
+  display: 'swap',
+});
+
+const crimsonText = Crimson_Text({
+  subsets: ['latin'],
+  weight: ['400'],
+  style: ['normal', 'italic'],
+  variable: '--font-serif',
+  display: 'swap',
+});
 
 export const metadata = {
   title: "The Silent Architect | Backend Developer Portfolio",
@@ -15,8 +38,8 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body>
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${cinzel.variable} ${jetbrainsMono.variable} ${crimsonText.variable}`} suppressHydrationWarning>
         {children}
         <SpeedInsights />
       </body>

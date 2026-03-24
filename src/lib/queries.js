@@ -1,10 +1,10 @@
-import { createClient } from '@/utils/supabase/server'
+import { createClient, createPublicClient } from '@/utils/supabase/server'
 
 /**
  * Fetch all active tech stack items, ordered by category
  */
 export async function fetchTechStack() {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   const { data, error } = await supabase
     .from('tech_stack')
     .select('id, name, category, sub_category, icon_key')
@@ -23,7 +23,7 @@ export async function fetchTechStack() {
  * Fetch all projects with their associated tech stack (via junction)
  */
 export async function fetchProjects() {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   const { data, error } = await supabase
     .from('projects')
     .select(`
@@ -72,7 +72,7 @@ export async function fetchProjects() {
  * Fetch only featured projects (for home page preview)
  */
 export async function fetchFeaturedProjects() {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   const { data, error } = await supabase
     .from('projects')
     .select(`
@@ -101,7 +101,7 @@ export async function fetchFeaturedProjects() {
  * Fetch photos with category info
  */
 export async function fetchPhotos() {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   const { data, error } = await supabase
     .from('photos')
     .select(`
@@ -126,7 +126,7 @@ export async function fetchPhotos() {
  * Fetch photo categories
  */
 export async function fetchPhotoCategories() {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   const { data, error } = await supabase
     .from('photo_categories')
     .select('id, name')
@@ -179,7 +179,7 @@ export async function fetchMessages() {
  * Check Supabase connection health
  */
 export async function checkDbHealth() {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   const start = Date.now()
   const { error } = await supabase.from('tech_stack').select('id', { head: true, count: 'exact' })
   const latency = Date.now() - start

@@ -10,6 +10,8 @@ import CustomCursor from "../components/CustomCursor";
 import AdminConsole from "../components/AdminConsole";
 import { fetchTechStack, fetchProjects, fetchPhotos } from "@/lib/queries";
 
+export const revalidate = 3600;
+
 export default async function Home() {
   // Server-side data fetching from Supabase
   const [techStack, projects, photos] = await Promise.all([
