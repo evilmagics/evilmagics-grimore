@@ -48,8 +48,21 @@ export default function Navbar() {
           letterSpacing: "0.3em",
           color: "var(--mana)",
           textDecoration: "none",
+          display: "flex",
+          alignItems: "center",
+          gap: "1rem"
         }}
       >
+        <img 
+          src="/logo.png" 
+          alt="Grimoire" 
+          style={{ 
+            width: "28px", 
+            height: "28px", 
+            filter: "drop-shadow(0 0 8px var(--mana-glow))",
+            objectFit: "contain"
+          }} 
+        />
         ./evilmagics
       </Link>
 
