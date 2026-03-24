@@ -3,7 +3,7 @@
 import { createClient } from '@/utils/supabase/server'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-import { deleteCloudinaryImage, uploadProjectImage } from '@/lib/cloudinary'
+import { deleteCloudinaryImage, uploadProjectImage, uploadPhotoImage } from '@/lib/cloudinary'
 
 // ============================================
 // AUTH ACTIONS
@@ -530,6 +530,184 @@ export async function removeProjectImage(projectId, imageId) {
   await ensureSinglePrimaryImage({ supabase, projectId })
 
   revalidatePath('/admin/projects')
+  revalidatePath('/')
+  return { success: true }
+}
+
+// ============================================
+// PHOTO CRUD ACTIONS — Issues #1 & #2
+// ============================================
+
+/**
+ * Create a new photo (echo)
+ */
+export async function createPhoto(formData) {
+  const supabase = await createClient()
+
+  try {
+    await requireAdmin(supabase)
+  } catch (error) {
+    return { success: false, error: error.message }
+  }
+
+  const title = formData.get('title') || null
+  const categoryId = formData.get('category_id') || null
+  const aspect = formData.get('aspect') || '4/3'
+  const featured = formData.get('featured') === 'true'
+  const capturedAt = formData.get('captured_at') || null
+  const file = formData.get('image')
+  const exifRaw = formData.get('exif_data')
+
+  let exifData = null
+  if (exifRaw) {
+    try { exifData = JSON.parse(exifRaw) } catch {}
+  }
+
+  // Parse manual EXIF fields
+  const aperture = formData.get('exif_aperture')
+  const shutter = formData.get('exif_shutter')
+  const iso = formData.get('exif_iso')
+  const focal = formData.get('exif_focal')
+  if (aperture || shutter || iso || focal) {
+    exifData = {
+      ...(exifData || {}),
+      ...(aperture && { aperture }),
+      ...(shutter && { shutter }),
+      ...(iso && { iso }),
+      ...(focal && { focal }),
+    }
+  }
+
+  let cloudinaryData = {}
+  if (file && typeof file === 'object' && typeof file.arrayBuffer === 'function' && file.size > 0) {
+    try {
+      cloudinaryData = await uploadPhotoImage({ file, title: title || 'echo' })
+    } catch (err) {
+      return { success: false, error: `Image upload failed: ${err.message}` }
+    }
+  }
+
+  const { error } = await supabase.from('photos').insert({
+    title,
+    category_id: categoryId || null,
+    aspect,
+    featured,
+    captured_at: capturedAt || null,
+    exif_data: exifData,
+    ...cloudinaryData,
+  })
+
+  if (error) {
+    if (cloudinaryData.cloudinary_id) {
+      await deleteCloudinaryImage(cloudinaryData.cloudinary_id).catch(() => null)
+    }
+    return { success: false, error: error.message }
+  }
+
+  revalidatePath('/admin/gallery')
+  revalidatePath('/gallery')
+  revalidatePath('/')
+  return { success: true }
+}
+
+/**
+ * Update an existing photo (echo) — Issues #2
+ */
+export async function updatePhoto(photoId, formData) {
+  const supabase = await createClient()
+
+  try {
+    await requireAdmin(supabase)
+  } catch (error) {
+    return { success: false, error: error.message }
+  }
+
+  const title = formData.get('title') || null
+  const categoryId = formData.get('category_id') || null
+  const aspect = formData.get('aspect') || '4/3'
+  const featured = formData.get('featured') === 'true'
+  const capturedAt = formData.get('captured_at') || null
+  const file = formData.get('image')
+
+  const aperture = formData.get('exif_aperture')
+  const shutter = formData.get('exif_shutter')
+  const iso = formData.get('exif_iso')
+  const focal = formData.get('exif_focal')
+  const exifData = (aperture || shutter || iso || focal)
+    ? { ...(aperture && { aperture }), ...(shutter && { shutter }), ...(iso && { iso }), ...(focal && { focal }) }
+    : null
+
+  let cloudinaryData = {}
+  let oldCloudinaryId = null
+
+  if (file && typeof file === 'object' && typeof file.arrayBuffer === 'function' && file.size > 0) {
+    // Fetch old cloudinary_id for cleanup
+    const { data: existing } = await supabase.from('photos').select('cloudinary_id').eq('id', photoId).single()
+    oldCloudinaryId = existing?.cloudinary_id
+
+    try {
+      cloudinaryData = await uploadPhotoImage({ file, title: title || 'echo' })
+    } catch (err) {
+      return { success: false, error: `Image upload failed: ${err.message}` }
+    }
+  }
+
+  const updates = {
+    title,
+    category_id: categoryId || null,
+    aspect,
+    featured,
+    captured_at: capturedAt || null,
+    ...(exifData && { exif_data: exifData }),
+    ...cloudinaryData,
+  }
+
+  const { error } = await supabase.from('photos').update(updates).eq('id', photoId)
+
+  if (error) {
+    if (cloudinaryData.cloudinary_id) {
+      await deleteCloudinaryImage(cloudinaryData.cloudinary_id).catch(() => null)
+    }
+    return { success: false, error: error.message }
+  }
+
+  // Cleanup old image after successful update
+  if (oldCloudinaryId && cloudinaryData.cloudinary_id) {
+    await deleteCloudinaryImage(oldCloudinaryId).catch(() => null)
+  }
+
+  revalidatePath('/admin/gallery')
+  revalidatePath('/gallery')
+  revalidatePath('/')
+  return { success: true }
+}
+
+/**
+ * Delete a photo (echo) — Issue #1
+ */
+export async function deletePhoto(photoId) {
+  const supabase = await createClient()
+
+  try {
+    await requireAdmin(supabase)
+  } catch (error) {
+    return { success: false, error: error.message }
+  }
+
+  const { data: photo } = await supabase.from('photos').select('cloudinary_id').eq('id', photoId).single()
+
+  if (photo?.cloudinary_id) {
+    await deleteCloudinaryImage(photo.cloudinary_id).catch(() => null)
+  }
+
+  const { error } = await supabase.from('photos').delete().eq('id', photoId)
+
+  if (error) {
+    return { success: false, error: error.message }
+  }
+
+  revalidatePath('/admin/gallery')
+  revalidatePath('/gallery')
   revalidatePath('/')
   return { success: true }
 }

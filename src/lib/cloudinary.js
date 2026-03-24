@@ -111,3 +111,35 @@ export async function deleteCloudinaryImage(publicId) {
     })
 }
 
+export async function uploadPhotoImage({ file, title = 'untitled' }) {
+    ensureCloudinaryConfigured()
+
+    const validation = validateImageFile(file)
+    if (!validation.valid) {
+        throw new Error(validation.error)
+    }
+
+    const arrayBuffer = await file.arrayBuffer()
+    const buffer = Buffer.from(arrayBuffer)
+
+    const baseFolder = 'grimoire/echoes'
+    const slug = sanitizeSegment(title)
+    const publicId = `${slug}-${Date.now()}`
+
+    const uploaded = await uploadBuffer(buffer, {
+        folder: baseFolder,
+        public_id: publicId,
+        resource_type: 'image',
+        overwrite: false,
+    })
+
+    return {
+        cloudinary_id: uploaded.public_id,
+        image_url: uploaded.secure_url,
+        width: uploaded.width,
+        height: uploaded.height,
+        format: uploaded.format,
+        bytes: uploaded.bytes,
+    }
+}
+
