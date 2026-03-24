@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
 
 export default function LoginPage() {
@@ -32,6 +34,13 @@ export default function LoginPage() {
       className="w-full h-screen bg-[#050505] flex items-center justify-center relative overflow-hidden font-mono text-[#E0E0E0] selection:bg-[#00E5FF]/20 selection:text-white"
       onClick={() => !isRevealed && setIsRevealed(true)}
     >
+      <Link 
+        href="/" 
+        className="absolute top-6 left-6 z-50 flex items-center gap-2 text-[#00E5FF]/50 hover:text-[#00E5FF] transition-colors font-mono text-xs tracking-widest uppercase"
+      >
+        <ArrowLeft className="w-4 h-4" />
+        Back to Home
+      </Link>
       
       {/* Alchemic Array Background (Adapted to Home Page Colors) */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-30 mix-blend-screen">
