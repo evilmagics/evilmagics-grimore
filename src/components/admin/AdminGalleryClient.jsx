@@ -5,16 +5,23 @@ import { Edit2, Trash2, Plus, Image as ImageIcon, Star } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useRouter, useSearchParams } from "next/navigation";
 import { deletePhoto } from "@/lib/actions";
 import { PhotoForm } from "@/components/admin/PhotoForm";
-import { useEffect, Suspense } from "react";
+import { useEffect, Suspense, useMemo } from "react";
 
 function AdminGalleryInner({ photos, categories }) {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [formOpen, setFormOpen] = useState(false);
     const [editingPhoto, setEditingPhoto] = useState(null);
+
+    // Search and Filter States
+    const [searchQuery, setSearchQuery] = useState("");
+    const [categoryFilter, setCategoryFilter] = useState("all");
+    const [statusFilter, setStatusFilter] = useState("all");
+    const [dateSort, setDateSort] = useState("newest");
 
     // Issue #10: auto-open on ?action=new
     useEffect(() => {
@@ -48,12 +55,29 @@ function AdminGalleryInner({ photos, categories }) {
         router.refresh();
     };
 
+    const filteredPhotos = useMemo(() => {
+        return photos.filter(photo => {
+            const searchLower = searchQuery.toLowerCase();
+            const matchesSearch = (photo.title || "Untitled").toLowerCase().includes(searchLower) ||
+                                  (photo.category || "").toLowerCase().includes(searchLower);
+            const matchesCategory = categoryFilter === "all" || photo.category === categoryFilter;
+            const matchesStatus = statusFilter === "all" || 
+                (statusFilter === "featured" && photo.featured) || 
+                (statusFilter === "unfeatured" && !photo.featured);
+            return matchesSearch && matchesCategory && matchesStatus;
+        }).sort((a, b) => {
+            const timeA = new Date(a.captured_at || a.created_at || 0).getTime();
+            const timeB = new Date(b.captured_at || b.created_at || 0).getTime();
+            return dateSort === "newest" ? timeB - timeA : timeA - timeB;
+        });
+    }, [photos, searchQuery, categoryFilter, statusFilter, dateSort]);
+
     return (
         <>
             {/* Header with Add button */}
             <div className="flex items-center justify-between mb-6">
                 <div className="text-sm text-muted-foreground font-mono">
-                    {photos.length} photo{photos.length !== 1 ? "s" : ""} in archive
+                    {filteredPhotos.length} photo{filteredPhotos.length !== 1 ? "s" : ""} in archive
                 </div>
                 <Button onClick={handleAdd} className="gap-2">
                     <Plus className="w-4 h-4" />
@@ -61,9 +85,48 @@ function AdminGalleryInner({ photos, categories }) {
                 </Button>
             </div>
 
+            {/* Filtering and Search Toolbar */}
+            <div className="flex flex-col sm:flex-row gap-4 mb-6">
+                <div className="flex-1">
+                    <Input 
+                        placeholder="Search echoes by title or category..." 
+                        value={searchQuery} 
+                        onChange={(e) => setSearchQuery(e.target.value)} 
+                        className="w-full max-w-sm"
+                    />
+                </div>
+                <div className="flex flex-wrap gap-2">
+                    <select 
+                        value={categoryFilter} 
+                        onChange={(e) => setCategoryFilter(e.target.value)}
+                        className="h-10 px-3 py-2 text-sm bg-background border border-input rounded-md ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                        <option value="all">All Categories</option>
+                        {categories?.map(c => <option key={c.id} value={c.name}>{c.name}</option>)}
+                    </select>
+                    <select 
+                        value={statusFilter} 
+                        onChange={(e) => setStatusFilter(e.target.value)}
+                        className="h-10 px-3 py-2 text-sm bg-background border border-input rounded-md ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                        <option value="all">All Status</option>
+                        <option value="featured">Featured</option>
+                        <option value="unfeatured">Unfeatured</option>
+                    </select>
+                    <select 
+                        value={dateSort} 
+                        onChange={(e) => setDateSort(e.target.value)}
+                        className="h-10 px-3 py-2 text-sm bg-background border border-input rounded-md ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                        <option value="newest">Newest First</option>
+                        <option value="oldest">Oldest First</option>
+                    </select>
+                </div>
+            </div>
+
             {/* Photo Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {photos.map((photo) => (
+                {filteredPhotos.map((photo) => (
                     <PhotoAdminCard
                         key={photo.id}
                         photo={photo}
@@ -72,6 +135,27 @@ function AdminGalleryInner({ photos, categories }) {
                     />
                 ))}
             </div>
+
+            {photos.length > 0 && filteredPhotos.length === 0 && (
+                <Card className="mt-6">
+                    <CardContent className="py-12 text-center text-muted-foreground text-sm">
+                        <ImageIcon className="w-8 h-8 mx-auto mb-3 opacity-30" />
+                        No echoes match your current filters.
+                        <br />
+                        <button
+                            onClick={() => {
+                                setSearchQuery("");
+                                setCategoryFilter("all");
+                                setStatusFilter("all");
+                                setDateSort("newest");
+                            }}
+                            className="mt-3 text-primary underline underline-offset-2 text-xs hover:opacity-80"
+                        >
+                            Reset filters
+                        </button>
+                    </CardContent>
+                </Card>
+            )}
 
             {photos.length === 0 && (
                 <Card>
