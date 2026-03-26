@@ -4,6 +4,7 @@ import ScrollReveal from "./ScrollReveal";
 import { submitMessage } from "@/lib/actions";
 
 export default function SignalSection() {
+  const [name, setName] = useState("");
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
   const [email, setEmail] = useState("");
@@ -37,8 +38,13 @@ export default function SignalSection() {
   }, []);
 
   const handleSend = async () => {
-    if (!subject.trim() || !message.trim() || !email.trim()) {
+    if (!name.trim() || !subject.trim() || !message.trim() || !email.trim()) {
       setError("Incomplete transmission. All fields required.");
+      return;
+    }
+
+    if (name.trim().length > 80) {
+      setError("Name too long. Maximum 80 characters.");
       return;
     }
 
@@ -54,6 +60,7 @@ export default function SignalSection() {
     try {
       const result = await submitMessage({
         email,
+        name,
         subject,
         content: message,
       });
@@ -77,7 +84,7 @@ export default function SignalSection() {
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === "Enter") handleSend();
+    if (e.key === "Enter" && !e.shiftKey) handleSend();
   };
 
   const inputStyle = {
@@ -165,8 +172,26 @@ export default function SignalSection() {
 
               <hr style={{ border: "none", borderTop: "1px solid rgba(0,229,255,0.05)", margin: "0.6rem 0" }} />
 
-              {/* Subject */}
+              {/* Name */}
               <div style={{ marginTop: "1rem", display: "flex", gap: "0.6rem", alignItems: "center" }}>
+                <span style={{ color: "var(--mana)", opacity: 0.5, fontSize: "0.62rem", minWidth: "120px" }}>name:</span>
+                <input
+                  type="text"
+                  placeholder="Your name or alias"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  style={inputStyle}
+                  spellCheck="false"
+                  autoComplete="off"
+                  maxLength={80}
+                />
+              </div>
+
+              <hr style={{ border: "none", borderTop: "1px solid rgba(0,229,255,0.05)", margin: "0.6rem 0" }} />
+
+              {/* Subject */}
+              <div style={{ display: "flex", gap: "0.6rem", alignItems: "center" }}>
                 <span style={{ color: "var(--mana)", opacity: 0.5, fontSize: "0.62rem", minWidth: "120px" }}>subject:</span>
                 <input
                   type="text"
@@ -183,17 +208,25 @@ export default function SignalSection() {
               <hr style={{ border: "none", borderTop: "1px solid rgba(0,229,255,0.05)", margin: "0.6rem 0" }} />
 
               {/* Message */}
-              <div style={{ display: "flex", gap: "0.6rem", alignItems: "center" }}>
-                <span style={{ color: "var(--mana)", opacity: 0.5, fontSize: "0.62rem", minWidth: "120px" }}>message:</span>
-                <input
-                  type="text"
-                  placeholder="Your transmission..."
+              <div style={{ display: "flex", gap: "0.6rem", alignItems: "flex-start" }}>
+                <span style={{ color: "var(--mana)", opacity: 0.5, fontSize: "0.62rem", minWidth: "120px", paddingTop: "0.1rem" }}>message:</span>
+                <textarea
+                  placeholder="Your transmission... (Shift+Enter for new line)"
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  style={inputStyle}
+                  style={{
+                    ...inputStyle,
+                    resize: "vertical",
+                    minHeight: "80px",
+                    maxHeight: "240px",
+                    lineHeight: 1.6,
+                    paddingTop: "0.1rem",
+                  }}
                   spellCheck="false"
                   autoComplete="off"
+                  maxLength={2000}
+                  rows={3}
                 />
               </div>
 
