@@ -25,13 +25,14 @@ export async function signOut() {
 /**
  * Submit a contact message (public, no auth required)
  */
-export async function submitMessage({ email, subject, content }) {
+export async function submitMessage({ email, name, subject, content }) {
   const supabase = await createClient()
 
   const { error } = await supabase
     .from('messages')
     .insert({
       sender_email: email,
+      sender_name: name?.trim() || null,
       subject,
       content,
     })
