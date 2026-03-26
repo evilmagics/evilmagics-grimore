@@ -33,16 +33,16 @@ export function MessagesClient({ initialMessages }) {
   const filteredMessages = useMemo(() => {
     return initialMessages.filter(msg => {
       const searchLower = searchQuery.toLowerCase();
-      const matchesSearch = 
+      const matchesSearch =
         (msg.sender_email || "").toLowerCase().includes(searchLower) ||
         (msg.sender_name || "").toLowerCase().includes(searchLower) ||
         (msg.subject || "").toLowerCase().includes(searchLower) ||
         (msg.content || "").toLowerCase().includes(searchLower);
-      
+
       const matchesStatus = statusFilter === "all" ||
         (statusFilter === "read" && msg.is_read) ||
         (statusFilter === "unread" && !msg.is_read);
-        
+
       return matchesSearch && matchesStatus;
     }).sort((a, b) => {
       const timeA = new Date(a.created_at).getTime();
@@ -69,8 +69,8 @@ export function MessagesClient({ initialMessages }) {
           <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
             <CardTitle className="text-sm font-medium">All Messages</CardTitle>
             <div className="flex flex-wrap items-center gap-2">
-              <Input 
-                placeholder="Search sender, name, or content..." 
+              <Input
+                placeholder="Search sender, name, or content..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full sm:w-[250px] h-8 text-xs"
@@ -84,7 +84,7 @@ export function MessagesClient({ initialMessages }) {
                 <option value="unread">Unread</option>
                 <option value="read">Read</option>
               </select>
-               <select
+              <select
                 value={dateSort}
                 onChange={(e) => setDateSort(e.target.value)}
                 className="h-8 px-2 text-xs bg-background border border-input rounded-md focus:outline-none focus:ring-1 focus:ring-ring"
@@ -162,15 +162,15 @@ export function MessagesClient({ initialMessages }) {
                   ))}
                 </TableBody>
               </Table>
-              
+
               <div className="flex items-center justify-between px-4 py-3 border-t border-border/50">
                 <div className="text-xs text-muted-foreground">
                   Showing {((currentPage - 1) * itemsPerPage) + 1} to {Math.min(currentPage * itemsPerPage, filteredMessages.length)} of {filteredMessages.length} messages
                 </div>
                 <div className="flex items-center gap-2">
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
+                  <Button
+                    variant="outline"
+                    size="sm"
                     className="h-8 w-8 p-0"
                     onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                     disabled={currentPage === 1}
@@ -180,9 +180,9 @@ export function MessagesClient({ initialMessages }) {
                   <div className="text-xs text-muted-foreground font-medium">
                     Page {currentPage} of {totalPages}
                   </div>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
+                  <Button
+                    variant="outline"
+                    size="sm"
                     className="h-8 w-8 p-0"
                     onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
                     disabled={currentPage === totalPages}
