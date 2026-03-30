@@ -481,20 +481,20 @@ export default function ConstructsSection({ projects = [] }) {
               <button
                 type="button"
                 onClick={() => handleRevealOpenChange(false)}
-                className="absolute right-8 top-8 z-[8] flex h-8 w-8 items-center justify-center border border-cyan-400/50 bg-black/65 text-cyan-100 transition-colors hover:bg-cyan-300 hover:text-black sm:right-10 sm:top-10"
+                className="absolute right-4 top-4 z-[8] flex h-10 w-10 items-center justify-center border border-cyan-400/50 bg-black/65 text-cyan-100 transition-colors hover:bg-cyan-300 hover:text-black sm:h-8 sm:w-8 sm:right-10 sm:top-10"
                 style={{ clipPath: "polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px)" }}
               >
-                <X className="h-3.5 w-3.5" />
+                <X className="h-4 w-4 sm:h-3.5 sm:w-3.5" />
               </button>
 
-              <div className="pointer-events-none absolute bottom-14 left-8 z-[7] sm:bottom-10 sm:left-10">
+              <div className="pointer-events-none absolute bottom-16 left-4 z-[7] sm:bottom-10 sm:left-10">
                 <div className="text-[0.68rem] tracking-[0.22em] text-cyan-300/85">
                   IMAGE {Math.min(revealImageIdx + 1, activeImages.length)} / {activeImages.length}
                 </div>
                 <h3 className="text-lg font-semibold text-white sm:text-xl">{activeProject.title}</h3>
               </div>
 
-              <div className="absolute bottom-14 left-1/2 z-[7] flex -translate-x-1/2 items-center gap-1 sm:bottom-10">
+              <div className="absolute bottom-12 left-1/2 z-[7] flex -translate-x-1/2 items-center gap-1 sm:bottom-10">
                 {activeImages.map((image, index) => (
                   <button
                     key={image.id || `${image.secure_url}-${index}`}
@@ -507,7 +507,7 @@ export default function ConstructsSection({ projects = [] }) {
                 ))}
               </div>
 
-              <div className="absolute bottom-8 right-8 z-[7] flex flex-col items-end gap-1.5 sm:bottom-10 sm:right-10">
+              <div className="absolute bottom-4 right-4 z-[7] flex flex-col items-end gap-1.5 sm:bottom-10 sm:right-10">
                 <div className="text-right text-[10px] font-medium tracking-[0.16em] text-cyan-200/80">
                   <div>ZOOM {zoomPercent}%</div>
                   <div>{autoplayStatusLabel}</div>
@@ -682,14 +682,11 @@ export default function ConstructsSection({ projects = [] }) {
         @media (max-width: 1024px) {
            .constructs-layout {
              flex-direction: column;
-             gap: 3rem;
+             gap: 2rem;
            }
            .constructs-orbit-container {
-             width: 400px;
-             height: 400px;
-             margin: 0 auto;
              transform: scale(0.8);
-             transform-origin: center center;
+             margin: -10% auto;
            }
            .constructs-content {
              border-left: none;
@@ -701,11 +698,17 @@ export default function ConstructsSection({ projects = [] }) {
         }
         @media (max-width: 768px) {
            .constructs-orbit-container {
-             transform: scale(0.6);
-             height: 350px;
+             transform: scale(0.65);
+             margin: -15% auto;
            }
            .constructs-content {
              padding-top: 1.5rem;
+           }
+           .orbit-node {
+             transform: translate(-50%, -50%) scale(1.6) !important;
+           }
+           .orbit-node:hover {
+             transform: translate(-50%, -50%) scale(2) !important;
            }
         }
       `}</style>
