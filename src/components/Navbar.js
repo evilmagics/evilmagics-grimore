@@ -74,9 +74,16 @@ export default function Navbar() {
           background: "none",
           border: "none",
           color: "var(--mana)",
-          fontSize: "1.2rem",
+          fontSize: "1.5rem",
           cursor: "pointer",
           zIndex: 600,
+          padding: "0.5rem",
+          marginRight: "-0.5rem",
+          touchAction: "manipulation",
+          width: "44px",
+          height: "44px",
+          alignItems: "center",
+          justifyContent: "center",
         }}
         className="mobile-nav-toggle"
         aria-label="Toggle navigation"
@@ -129,7 +136,7 @@ export default function Navbar() {
             padding: 1rem 1.5rem !important;
           }
           .mobile-nav-toggle {
-            display: block !important;
+            display: flex !important;
           }
           .nav-links {
             position: fixed;
