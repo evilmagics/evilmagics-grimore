@@ -139,7 +139,6 @@ export async function uploadPhotoImage({ file, title = 'untitled' }) {
         width: uploaded.width,
         height: uploaded.height,
         format: uploaded.format,
-        bytes: uploaded.bytes,
     }
 }
 
