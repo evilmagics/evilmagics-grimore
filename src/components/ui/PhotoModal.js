@@ -91,6 +91,7 @@ export default function PhotoModal({ photo, onClose, onNext, onPrev }) {
 
         {/* Modal Content HUD */}
         <div
+          className="modal-hud"
           style={{
             position: "absolute",
             bottom: 0,
@@ -102,28 +103,28 @@ export default function PhotoModal({ photo, onClose, onNext, onPrev }) {
             pointerEvents: "none"
           }}
         >
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
-            <div>
+          <div className="modal-hud-inner">
+            <div className="modal-hud-title-container">
               <div style={{ fontFamily: "monospace", fontSize: "0.8rem", color: "var(--mana)", marginBottom: "0.5rem", letterSpacing: "3px" }}>
                 {photo.category?.toUpperCase()} // ID:{photo.id}
               </div>
-              <h2 style={{ margin: "0", fontSize: "2rem", color: "#fff", textShadow: "0 2px 10px rgba(0,229,255,0.5)" }}>
+              <h2 className="modal-hud-title">
                 {photo.title}
               </h2>
             </div>
-            <div style={{ textAlign: "right", fontFamily: "monospace", fontSize: "0.75rem", color: "rgba(255,255,255,0.7)", lineHeight: "1.6" }}>
-              <div style={{ display: "grid", gridTemplateColumns: "auto auto", gap: "0.2rem 0.85rem", justifyContent: "end", alignItems: "center" }}>
+            <div className="modal-hud-exif">
+              <div className="exif-grid">
                 <span>{photo.exif_data?.aperture || "No data"}</span>
-                <span style={{ color: "var(--mana)" }}>[APT]</span>
+                <span className="exif-label">[APT]</span>
 
                 <span>{photo.exif_data?.shutter || "No data"}</span>
-                <span style={{ color: "var(--mana)" }}>[SHT]</span>
+                <span className="exif-label">[SHT]</span>
 
                 <span>{photo.exif_data?.iso || "No data"}</span>
-                <span style={{ color: "var(--mana)" }}>[ISO]</span>
+                <span className="exif-label">[ISO]</span>
 
                 <span>{photo.exif_data?.focal || "No data"}</span>
-                <span style={{ color: "var(--mana)" }}>[FCL]</span>
+                <span className="exif-label">[FCL]</span>
               </div>
             </div>
           </div>
@@ -132,29 +133,8 @@ export default function PhotoModal({ photo, onClose, onNext, onPrev }) {
         {/* Navigation Overlays */}
         {onPrev && (
           <div
-            className="elec-target"
+            className="elec-target modal-nav-button prev-button"
             onClick={onPrev}
-            style={{
-              position: "absolute",
-              left: 0,
-              top: 0,
-              bottom: 0,
-              width: "15%",
-              zIndex: 10,
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "flex-start",
-              paddingLeft: "2rem",
-              background: "linear-gradient(to right, rgba(0,10,20,0.5), transparent)",
-              opacity: 0,
-              transition: "opacity 0.3s",
-              color: "var(--mana)",
-              fontSize: "3rem",
-              fontFamily: "monospace"
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.opacity = 1)}
-            onMouseLeave={(e) => (e.currentTarget.style.opacity = 0)}
           >
             &lt;
           </div>
@@ -162,29 +142,8 @@ export default function PhotoModal({ photo, onClose, onNext, onPrev }) {
         
         {onNext && (
           <div
-            className="elec-target"
+            className="elec-target modal-nav-button next-button"
             onClick={onNext}
-            style={{
-              position: "absolute",
-              right: 0,
-              top: 0,
-              bottom: 0,
-              width: "15%",
-              zIndex: 10,
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "flex-end",
-              paddingRight: "2rem",
-              background: "linear-gradient(to left, rgba(0,10,20,0.5), transparent)",
-              opacity: 0,
-              transition: "opacity 0.3s",
-              color: "var(--mana)",
-              fontSize: "3rem",
-              fontFamily: "monospace"
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.opacity = 1)}
-            onMouseLeave={(e) => (e.currentTarget.style.opacity = 0)}
           >
             &gt;
           </div>
@@ -192,34 +151,8 @@ export default function PhotoModal({ photo, onClose, onNext, onPrev }) {
 
         {/* Close Button UI */}
         <div
-          className="elec-target"
+          className="elec-target modal-close-btn"
           onClick={onClose}
-          style={{
-            position: "absolute",
-            top: "calc(2% + 0.8rem)",
-            right: "calc(2% + 0.8rem)",
-            zIndex: 11,
-            width: "40px",
-            height: "40px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            background: "rgba(0,10,20,0.6)",
-            border: "1px solid var(--mana)",
-            color: "var(--mana)",
-            fontFamily: "monospace",
-            cursor: "pointer",
-            clipPath: "polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px)",
-            transition: "all 0.3s"
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = "var(--mana)";
-            e.currentTarget.style.color = "#000";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = "rgba(0,10,20,0.6)";
-            e.currentTarget.style.color = "var(--mana)";
-          }}
         >
           X
         </div>
@@ -232,6 +165,129 @@ export default function PhotoModal({ photo, onClose, onNext, onPrev }) {
         @keyframes scaleUp {
           from { transform: scale(0.95); opacity: 0; }
           to { transform: scale(1); opacity: 1; }
+        }
+        .modal-hud-inner {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-end;
+          gap: 1rem;
+        }
+        .modal-hud-title {
+          margin: 0;
+          font-size: 2rem;
+          color: #fff;
+          text-shadow: 0 2px 10px rgba(0,229,255,0.5);
+          transition: all 0.3s ease;
+        }
+        .modal-hud-exif {
+          text-align: right;
+          font-family: monospace;
+          font-size: 0.75rem;
+          color: rgba(255,255,255,0.7);
+          line-height: 1.6;
+        }
+        .exif-grid {
+          display: grid;
+          grid-template-columns: auto auto;
+          gap: 0.2rem 0.85rem;
+          justify-content: end;
+          align-items: center;
+        }
+        .exif-label {
+          color: var(--mana);
+        }
+        .modal-nav-button {
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          width: 15%;
+          z-index: 10;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          opacity: 0;
+          transition: opacity 0.3s;
+          color: var(--mana);
+          font-size: 3rem;
+          font-family: monospace;
+          -webkit-tap-highlight-color: transparent;
+        }
+        .modal-nav-button:hover {
+          opacity: 1;
+        }
+        .prev-button {
+          left: 0;
+          justify-content: flex-start;
+          padding-left: 2rem;
+          background: linear-gradient(to right, rgba(0,10,20,0.5), transparent);
+        }
+        .next-button {
+          right: 0;
+          justify-content: flex-end;
+          padding-right: 2rem;
+          background: linear-gradient(to left, rgba(0,10,20,0.5), transparent);
+        }
+        .modal-close-btn {
+          position: absolute;
+          top: calc(2% + 0.8rem);
+          right: calc(2% + 0.8rem);
+          z-index: 11;
+          width: 40px;
+          height: 40px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: rgba(0,10,20,0.6);
+          border: 1px solid var(--mana);
+          color: var(--mana);
+          font-family: monospace;
+          cursor: pointer;
+          clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+          transition: all 0.3s;
+        }
+        .modal-close-btn:hover {
+          background: var(--mana);
+          color: #000;
+        }
+
+        @media (max-width: 768px) {
+          .modal-hud {
+            padding: 1rem !important;
+          }
+          .modal-hud-inner {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+          }
+          .modal-hud-title {
+            font-size: 1.3rem;
+          }
+          .modal-hud-exif {
+            text-align: left;
+            font-size: 0.65rem;
+          }
+          .exif-grid {
+            justify-content: start;
+            grid-template-columns: auto auto auto auto;
+            column-gap: 0.5rem;
+          }
+          .modal-nav-button {
+            width: 20%;
+            font-size: 2rem;
+            opacity: 0.3; /* Always slightly visible on mobile */
+          }
+          .prev-button {
+            padding-left: 1rem;
+          }
+          .next-button {
+            padding-right: 1rem;
+          }
+          .modal-close-btn {
+            top: 0.5rem;
+            right: 0.5rem;
+            width: 32px;
+            height: 32px;
+          }
         }
       `}</style>
     </div>
