@@ -317,8 +317,16 @@ export default function RuneGrid({ techStack = [] }) {
           .globe-icon-wrapper {
             transform: scale(0.8);
           }
+          .globe-icon-wrapper:hover + .globe-label,
+          .globe-label:hover,
+          .globe-icon-wrapper:active + .globe-label {
+            opacity: 1 !important;
+            transform: translateY(0) scale(1) !important;
+          }
           .globe-label {
-            display: none !important; /* Hide label on mobile to avoid clutter */
+            font-size: 0.8rem !important;
+            padding: 0.5rem 1rem !important;
+            z-index: 1000 !important;
           }
         }
       `}</style>
